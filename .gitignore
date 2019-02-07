@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+
+# Xcode
+*.xcuserstate
+*.xcuserdatad
+
+# build folder
+NativeCode/Xcode/build/
+
+# Unity
+Assets/Plugins
