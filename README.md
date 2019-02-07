@@ -2,6 +2,8 @@
 
 The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity audio plugin.
 
+[![Travis](https://img.shields.io/travis/CICM/HoaLibrary-Unity.svg?label=travis)](https://travis-ci.org/CICM/HoaLibrary-Unity)
+
 ### Licence :
 The HoaLibrary is under the terms of the <a title="GNU" href="http://www.gnu.org/copyleft/gpl.html">GNU Public License</a>. </br>
 If you want to avoid the restrictions of the GPL and use HoaLibrary for a closed-source product, please [contact the CICM](http://cicm.mshparisnord.org/).
