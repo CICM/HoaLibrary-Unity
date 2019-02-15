@@ -1,1 +1,1 @@
-DECLARE_EFFECT("HoaLibrary VR Spatializer", HoaLibraryVR)
+DECLARE_EFFECT("HoaLibrary VR Spatializer", HoaLibraryVR_Spatializer)
