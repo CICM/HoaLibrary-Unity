@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		617AD2CC2216CD3100EA8207 /* Plugin_HoaLibraryVR_Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 617AD2CB2216CD3100EA8207 /* Plugin_HoaLibraryVR_Renderer.cpp */; };
+		617AD2CF2216DBF500EA8207 /* Debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 617AD2CD2216DBF500EA8207 /* Debug.cpp */; };
 		61839146220CA46C00D59B49 /* AudioPluginUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3D199B5E1858F3E60063EC53 /* AudioPluginUtil.cpp */; };
 		61839147220CA46C00D59B49 /* Plugin_HoaLibraryVR_Spatializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3BA205651AD1A54300CA4036 /* Plugin_HoaLibraryVR_Spatializer.cpp */; };
 		61839149220CA46C00D59B49 /* CoreMIDI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3BC406E31AFB7CDF00E92CB9 /* CoreMIDI.framework */; };
@@ -25,6 +26,8 @@
 		3D199B6D1858F3E60063EC53 /* PluginList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PluginList.h; path = ../PluginList.h; sourceTree = "<group>"; };
 		3DA35E0E175F7CA000FA3842 /* AudioPluginInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AudioPluginInterface.h; path = ../AudioPluginInterface.h; sourceTree = "<group>"; };
 		617AD2CB2216CD3100EA8207 /* Plugin_HoaLibraryVR_Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Plugin_HoaLibraryVR_Renderer.cpp; path = ../Plugin_HoaLibraryVR_Renderer.cpp; sourceTree = "<group>"; };
+		617AD2CD2216DBF500EA8207 /* Debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Debug.cpp; path = ../Debug.cpp; sourceTree = "<group>"; };
+		617AD2CE2216DBF500EA8207 /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Debug.h; path = ../Debug.h; sourceTree = "<group>"; };
 		6183914F220CA46C00D59B49 /* AudioPluginHoaLibraryVR.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AudioPluginHoaLibraryVR.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D576317048677EA00EA77CD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,6 +80,8 @@
 			children = (
 				3D199B5E1858F3E60063EC53 /* AudioPluginUtil.cpp */,
 				3D199B5F1858F3E60063EC53 /* AudioPluginUtil.h */,
+				617AD2CD2216DBF500EA8207 /* Debug.cpp */,
+				617AD2CE2216DBF500EA8207 /* Debug.h */,
 				3BA205651AD1A54300CA4036 /* Plugin_HoaLibraryVR_Spatializer.cpp */,
 				617AD2CB2216CD3100EA8207 /* Plugin_HoaLibraryVR_Renderer.cpp */,
 				3D199B6D1858F3E60063EC53 /* PluginList.h */,
@@ -157,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				617AD2CC2216CD3100EA8207 /* Plugin_HoaLibraryVR_Renderer.cpp in Sources */,
+				617AD2CF2216DBF500EA8207 /* Debug.cpp in Sources */,
 				61839146220CA46C00D59B49 /* AudioPluginUtil.cpp in Sources */,
 				61839147220CA46C00D59B49 /* Plugin_HoaLibraryVR_Spatializer.cpp in Sources */,
 			);

@@ -1,6 +1,7 @@
 // Please note that this will only work on Unity 5.2 or higher.
 
 #include "AudioPluginUtil.h"
+#include "Debug.h"
 #include <array>
 
 namespace HoaLibraryVR_Spatializer
@@ -154,8 +155,6 @@ namespace HoaLibraryVR_Spatializer
             */
         }
         
-        std::array<float, P_NUM> p;
-        
     private:
         
         static UNITY_AUDIODSP_RESULT UNITY_AUDIODSP_CALLBACK
@@ -167,7 +166,12 @@ namespace HoaLibraryVR_Spatializer
             return UNITY_AUDIODSP_OK;
         }
         
+    private:
+        
+        std::array<float, P_NUM> p;
     };
+    
+    //==============================================================================
     
     using processor_t = HoaAudioProcessor;
     
