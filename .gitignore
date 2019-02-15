@@ -38,5 +38,14 @@
 # build folder
 NativeCode/Xcode/build/
 
-# Unity
+# Unity generated
+Builds/
+Temp/
+Library/
+obj/
+Logs/
+ProjectSettings/ProjectVersion.txt
+Assets/Plugins.meta
+
+# Unity generated
 Assets/Plugins
