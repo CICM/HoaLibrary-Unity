@@ -3,20 +3,36 @@
 The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity audio plugin.
 
 [![Travis](https://img.shields.io/travis/CICM/HoaLibrary-Unity.svg?label=travis)](https://travis-ci.org/CICM/HoaLibrary-Unity)
+[![Appveyor](https://img.shields.io/appveyor/ci/CICM/HoaLibrary-Unity.svg?label=appveyor)](https://ci.appveyor.com/project/CICM/HoaLibrary-Unity/history)
 
-### Compilation :
+### Install :
 
-(MacOS only)
+##### Clone project :
 
 ```shell
+# clone project
 $ git clone --recursive https://github.com/CICM/HoaLibrary-Unity.git
 $ cd HoaLibrary-Unity
+# create build directory
+$ cd NativeCode
+$ mkdir build && cd build
 ```
 
+##### Generate project, build and install (MacOS) :
+
 ```shell
-$ cd NativeCode/Xcode
-$ xcodebuild -configuration Release -alltargets clean
+$ cmake -G Xcode -DCMAKE_BUILD_TYPE=Release ..
+$ xcodebuild -configuration Release -target install
 ```
+
+##### Generate project, build and install (Windows) :
+
+```shell
+$ cmake .. -G "Visual Studio 15 2017 Win64"
+$ cmake --build . --target INSTALL --config Release
+```
+
+You should see generated plugin in `/Assets/Plugins` directory.
 
 ### Licence :
 The HoaLibrary is under the terms of the <a title="GNU" href="http://www.gnu.org/copyleft/gpl.html">GNU Public License</a>. </br>
