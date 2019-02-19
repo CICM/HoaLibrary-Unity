@@ -12,8 +12,10 @@ matrix:
     compiler: clang++
     env: AudioPlugin HoaLibraryVR
     script:
-    - cd NativeCode/Xcode
-    - xcodebuild -configuration Release -alltargets clean
+    - cd NativeCode
+    - mkdir build && cd build
+    - cmake -G Xcode -DCMAKE_BUILD_TYPE=Release ..
+    - xcodebuild -configuration Release -target install
 
 notifications:
   email: true

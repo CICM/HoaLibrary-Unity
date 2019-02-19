@@ -1,0 +1,27 @@
+os: Visual Studio 2017
+
+environment:
+   matrix:
+      - CONFIGURATION: Release
+        PLATFORM: x64
+
+install:
+  - git submodule update --init --recursive
+  - cmake --version
+
+build_script:
+  - cd %APPVEYOR_BUILD_FOLDER%\NativeCode
+  - mkdir build && cd build
+  - cmake .. -G "Visual Studio 15 2017 Win64"
+  - cmake --build . --target INSTALL --config %CONFIGURATION%
+
+after_build:
+  - cd %APPVEYOR_BUILD_FOLDER%
+
+notifications:
+  - provider: Email
+    to:
+      - '{{commitAuthorEmail}}'
+    on_build_success: false
+    on_build_failure: false
+    on_build_status_changed: true
