@@ -5,6 +5,8 @@ The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity aud
 [![Travis](https://img.shields.io/travis/CICM/HoaLibrary-Unity.svg?label=travis)](https://travis-ci.org/CICM/HoaLibrary-Unity)
 [![Appveyor](https://img.shields.io/appveyor/ci/CICM/HoaLibrary-Unity.svg?label=appveyor)](https://ci.appveyor.com/project/CICM/HoaLibrary-Unity/history)
 
+> This project is under development, there is no release yet.
+
 ### Install :
 
 ##### Clone project :
@@ -29,7 +31,7 @@ $ xcodebuild -configuration Release -target install
 
 ```shell
 $ cmake .. -G "Visual Studio 15 2017 Win64"
-$ cmake --build . --target INSTALL --config Release
+$ cmake --build . --config Release --target INSTALL
 ```
 
 You should see generated plugin in `/Assets/Plugins` directory.
