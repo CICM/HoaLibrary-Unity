@@ -1,7 +1,6 @@
 // Please note that this will only work on Unity 5.2 or higher.
 
 #include "AudioPluginUtil.h"
-#include "Debug.h"
 #include <array>
 
 namespace HoaLibraryVR_Spatializer
