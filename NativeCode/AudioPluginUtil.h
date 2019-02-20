@@ -406,15 +406,15 @@ public:
         this->maxval = maxval;
     }
 
-    inline void SetPeriod(float period)
+    inline void SetPeriod(float period_)
     {
-        SetPeriod(period, 1.0f / period);
+        SetPeriod(period_, 1.0f / period_);
     }
 
-    inline void SetPeriod(float period, float invperiod)
+    inline void SetPeriod(float period_, float invperiod_)
     {
-        period = period;
-        invperiod = invperiod;
+        period = period_;
+        invperiod = invperiod_;
     }
 
     inline float Sample(Random& random)
