@@ -27,6 +27,7 @@
 #   define HOA_LOG(message) ::fprintf(stdout, message);
 #endif
 
+#include <assert.h>
 #include <atomic>
 #include <vector>
 #include <array>
