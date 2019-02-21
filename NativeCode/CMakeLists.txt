@@ -30,6 +30,10 @@ set(HOA_UNITY_SOURCES
         ${HOA_UNITY_SOURCE_DIR}/AudioPluginUtil.h
         ${HOA_UNITY_SOURCE_DIR}/AudioPluginUtil.cpp
         ${HOA_UNITY_SOURCE_DIR}/pluginList.h
+        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryApi.h
+        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryApi.cpp
+        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryVR.h
+        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryVR.cpp
         ${HOA_UNITY_SOURCE_DIR}/UnityCallbacks.hpp
         ${HOA_UNITY_SOURCE_DIR}/Plugin_HoaLibraryVR_Renderer.cpp
         ${HOA_UNITY_SOURCE_DIR}/Plugin_HoaLibraryVR_Spatializer.cpp
