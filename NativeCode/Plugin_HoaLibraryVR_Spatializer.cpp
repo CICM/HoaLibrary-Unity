@@ -1,10 +1,14 @@
 // Please note that this will only work on Unity 5.2 or higher.
 
+#include "HoaLibraryVR.h"
+
+#include "AudioPluginInterface.h"
 #include "AudioPluginUtil.h"
-#include <array>
 
 namespace HoaLibraryVR_Spatializer
 {
+    using namespace HoaLibraryVR;
+    using source_id_t = HoaLibraryApi::source_id_t;
     using effect_definition_t = UnityAudioEffectDefinition;
     using param_definition_t = UnityAudioParameterDefinition;
     using effect_state_t = UnityAudioEffectState;
@@ -13,6 +17,7 @@ namespace HoaLibraryVR_Spatializer
     // Processor
     //==============================================================================
     
+    //! @brief Sends audio and spatialization data to the HoaLibrary System
     class HoaAudioProcessor
     {
     public:
@@ -33,16 +38,20 @@ namespace HoaLibraryVR_Spatializer
         {
             int numparams = P_NUM;
             definition.paramdefs = new param_definition_t[numparams];
-            RegisterParameter(definition, "AudioSrc Attn", "", 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, P_AUDIOSRC_ATTN,
+            
+            RegisterParameter(definition, "AudioSrc Attn", "",
+                              0.0f, 1.0f, 1.0f, 1.0f, 1.0f, P_AUDIOSRC_ATTN,
                               "AudioSource distance attenuation");
             
-            RegisterParameter(definition, "Fixed Volume", "", 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, P_FIXEDVOLUME,
+            RegisterParameter(definition, "Fixed Volume", "",
+                              0.0f, 1.0f, 0.0f, 1.0f, 1.0f, P_FIXEDVOLUME,
                               "Fixed volume amount");
             
-            RegisterParameter(definition, "Custom Falloff", "", 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, P_CUSTOMFALLOFF,
+            RegisterParameter(definition, "Custom Falloff", "",
+                              0.0f, 1.0f, 0.0f, 1.0f, 1.0f, P_CUSTOMFALLOFF,
                               "Custom volume falloff amount (logarithmic)");
             
-            // required flag to be recognized as a spatialiser plugin
+            // required flag to be recognized as a spatialiser plugin by unity
             definition.flags |= UnityAudioEffectDefinitionFlags_IsSpatializer;
             
             return numparams;
@@ -57,12 +66,17 @@ namespace HoaLibraryVR_Spatializer
                 state->spatializerdata->distanceattenuationcallback = DistanceAttenuationCallback;
             
             InitParametersFromDefinitions(registerEffect, p.data());
+            
+            m_source_id = HoaLibraryVR::CreateSource();
         }
         
         //! @brief Release ressources.
-        void release() {}
+        void release()
+        {
+            HoaLibraryVR::DestroySource(m_source_id);
+        }
         
-        bool setFloatParameter(effect_state_t* state, int index, float value)
+        bool setFloatParameter(effect_state_t* state, int index, float_t value)
         {
             if (index >= P_NUM)
                 return false;
@@ -71,7 +85,7 @@ namespace HoaLibraryVR_Spatializer
             return true;
         }
         
-        bool getFloatParameter(effect_state_t* state, int index, float* value, char *valuestr)
+        bool getFloatParameter(effect_state_t* state, int index, float_t* value, char *valuestr)
         {
             if (index >= P_NUM)
                 return false;
@@ -86,47 +100,61 @@ namespace HoaLibraryVR_Spatializer
         }
         
         //! @brief Check host compatibility.
-        //! @details because hostapiversion is only supported from SDK version 1.03 (i.e. Unity 5.2) and onwards.
-        //! Since we are only checking for version 0x010300 here,
-        //! we can't use newer fields in the UnityAudioSpatializerData struct, such as minDistance and maxDistance.
+        //! @details because hostapiversion is only supported from SDK version 1.03
+        //! (i.e. Unity 5.2) and onwards.
+        //! Since we are only checking for version 0x010300 here, we can't use
+        //! newer fields in the UnityAudioSpatializerData struct,
+        //! such as minDistance and maxDistance.
         bool isHostCompatible(effect_state_t* state) const
         {
             return (state->structsize >= sizeof(effect_state_t)
                     && state->hostapiversion >= 0x010300);
         }
         
-        float getAttenuation(effect_state_t* state, float distanceIn, float attenuationIn)
+        float getAttenuation(effect_state_t* state, float_t distanceIn, float_t attenuationIn)
         {
             return (p[P_AUDIOSRC_ATTN] * attenuationIn + p[P_FIXEDVOLUME] +
                     p[P_CUSTOMFALLOFF] * (1.0f / FastMax(1.0f, distanceIn)));
         }
         
         void process(effect_state_t* state,
-                     float* inbuffer, float* outbuffer, unsigned int length,
+                     float_t* inputs, float_t* outputs, unsigned int length,
                      int numins, int numouts)
         {
             // Check that I/O formats are right and that the host API supports this feature
             if ((numins != 2 || numouts != 2)
-                || (!isHostCompatible(state) || !state->spatializerdata))
+                || (!isHostCompatible(state) || !state->spatializerdata)
+                || m_source_id == HoaLibraryApi::invalid_source_id)
             {
-                memcpy(outbuffer, inbuffer, length * numouts * sizeof(float));
+                std::fill(outputs, outputs + length * numouts, 0.f);
                 return;
             }
             
-            /*
-            static const float kRad2Deg = 180.0f / kPI;
+            const auto& spatinfos = *state->spatializerdata;
+            const auto pan = spatinfos.stereopan; // [-1 to 1]
             
-            float* m = state->spatializerdata->listenermatrix;
-            float* s = state->spatializerdata->sourcematrix;
+            auto const* s = spatinfos.sourcematrix;
             
             // Currently we ignore source orientation and only use the position
-            float px = s[12];
-            float py = s[13];
-            float pz = s[14];
+            const float_t pos_x = s[12];
+            const float_t pos_y = s[13];
+            const float_t pos_z = s[14];
             
-            float dir_x = m[0] * px + m[4] * py + m[8] * pz + m[12];
-            float dir_y = m[1] * px + m[5] * py + m[9] * pz + m[13];
-            float dir_z = m[2] * px + m[6] * py + m[10] * pz + m[14];
+            HoaLibraryVR::SetSourcePan(m_source_id, pan);
+            
+            HoaLibraryVR::SetSourceTransform(m_source_id,
+                                             pos_x, pos_y, pos_z,
+                                             0.f, 0.f, 0.f, 0.f);
+            
+            HoaLibraryVR::ProcessSource(m_source_id, length, inputs);
+
+            /*
+            static const float_t kRad2Deg = 180.0f / kPI;
+
+            auto const* m = spatinfos.listenermatrix;
+            float_t dir_x = m[0] * pos_x + m[4] * pos_y + m[8] * pos_z + m[12];
+            float_t dir_y = m[1] * pos_x + m[5] * pos_y + m[9] * pos_z + m[13];
+            float_t dir_z = m[2] * pos_x + m[6] * pos_y + m[10] * pos_z + m[14];
             
             float azimuth = (fabsf(dir_z) < 0.001f) ? 0.0f : atan2f(dir_x, dir_z);
             if (azimuth < 0.0f)
@@ -136,21 +164,12 @@ namespace HoaLibraryVR_Spatializer
             
             azimuth = FastClip(azimuth * kRad2Deg, 0.0f, 360.0f);
             
-            const float elevation = atan2f(dir_y, sqrtf(dir_x * dir_x + dir_z * dir_z) + 0.001f) * kRad2Deg;
-            float spatialblend = state->spatializerdata->spatialblend;
-            float reverbmix = state->spatializerdata->reverbzonemix;
-            float stereopan = state->spatializerdata->stereopan;
-            float spread = cosf(state->spatializerdata->spread * kPI / 360.0f);
-            float spreadmatrix[2] = { 2.0f - spread, spread };
-            
-            for (int sampleOffset = 0; sampleOffset < length; ++sampleOffset)
-            {
-                for (int c = 0; c < 2; c++)
-                {
-                    // stereopan is in the [-1; 1] range, this acts the way fmod does it for stereo
-                    //float pan = FastMax(0.0f, 1.0f - ((c == 0) ? stereopan : -stereopan));
-                }
-            }
+            const float_t elevation = atan2f(dir_y, sqrtf(dir_x * dir_x + dir_z * dir_z) + 0.001f) * kRad2Deg;
+            float_t spatialblend = spatinfos.spatialblend;
+            float_t reverbmix = spatinfos.reverbzonemix;
+            float_t stereopan = spatinfos.stereopan;
+            float_t spread = cosf(spatinfos.spread * kPI / 360.0f);
+            float_t spreadmatrix[2] = { 2.0f - spread, spread };
             */
         }
         
@@ -158,7 +177,7 @@ namespace HoaLibraryVR_Spatializer
         
         static UNITY_AUDIODSP_RESULT UNITY_AUDIODSP_CALLBACK
         DistanceAttenuationCallback(effect_state_t* state,
-                                    float distanceIn, float attenuationIn, float* attenuationOut)
+                                    float_t distanceIn, float_t attenuationIn, float_t* attenuationOut)
         {
             auto* processor = state->GetEffectData<HoaAudioProcessor>();
             *attenuationOut = processor->getAttenuation(state, distanceIn, attenuationIn);
@@ -167,9 +186,10 @@ namespace HoaLibraryVR_Spatializer
         
     private:
         
-        std::array<float, P_NUM> p;
+        std::array<float_t, P_NUM> p;
+        
+        source_id_t m_source_id = HoaLibraryApi::invalid_source_id;
     };
     
     #include "UnityCallbacks.hpp"
 }
-
