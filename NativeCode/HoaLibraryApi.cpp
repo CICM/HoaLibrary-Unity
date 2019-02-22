@@ -51,12 +51,6 @@ namespace HoaLibraryVR
     
     void Source::setPosition(float_t x, float_t y, float_t z)
     {
-        
-    }
-    
-    void Source::process(float_t* outputs, size_t frames)
-    {
-        //std::copy(outputs, outputs + frames, outputs);
     }
     
     void Source::process(float_t** outputs, size_t frames)
