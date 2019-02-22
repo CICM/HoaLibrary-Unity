@@ -27,6 +27,8 @@
 #   define HOA_LOG(message) ::fprintf(stdout, message);
 #endif
 
+#include <Hoa.hpp>
+
 #include <assert.h>
 #include <atomic>
 #include <vector>
@@ -38,6 +40,12 @@ namespace HoaLibraryVR
     using float_t = float;
     
     class HoaLibraryApi;
+    
+    //! @brief Returns the number of harmonics depending on an ambisonic order.
+    static constexpr size_t get_num_harmonics(const size_t order)
+    {
+        return (order + 1) * (order + 1);
+    }
     
     extern "C"
     {
@@ -67,15 +75,17 @@ namespace HoaLibraryVR
         
         void setPosition(float_t x, float_t y, float_t z);
         
-        void process(float_t* outputs, size_t frames);
-        
-        std::vector<float_t>& getBuffer();
+        void process(float_t** outputs, size_t frames);
         
     private:
         
         float_t m_gain = 1.f;
         float_t m_pan = 0.f;
+        
+        hoa::Encoder<hoa::Hoa3d, float_t> m_encoder;
+        
         std::vector<float_t> m_mono_input_buffer {};
+        std::vector<float_t> m_temp_harmonics {};
     };
     
     // ==================================================================================== //
@@ -142,10 +152,10 @@ namespace HoaLibraryVR
         //! @brief Sets the given source's position.
         //! @details Note that, the given position for an ambisonic source is only used
         //! to determine the corresponding room effects to be applied.
-        // @param source_id Id of source.
-        // @param x X coordinate of source position in world space.
-        // @param y Y coordinate of source position in world space.
-        // @param z Z coordinate of source position in world space.
+        //! @param source_id Id of source.
+        //! @param x X coordinate of source position in world space.
+        //! @param y Y coordinate of source position in world space.
+        //! @param z Z coordinate of source position in world space.
         void setSourcePosition(source_id_t source_id, float_t x, float_t y, float_t z);
         
         //! @brief Sets the stereo pan
@@ -160,7 +170,9 @@ namespace HoaLibraryVR
     private:
         
         static constexpr size_t m_output_channels = 2;
-        const size_t m_order = 5;
+        static constexpr size_t m_order = 5;
+        static constexpr size_t m_num_harmonics = get_num_harmonics(m_order);
+        
         const size_t m_vectorsize;
         
         // Incremental source id counter.
@@ -168,6 +180,12 @@ namespace HoaLibraryVR
         std::unordered_map<source_id_t, std::unique_ptr<Source>> m_sources;
         
         float_t m_master_gain = 1.f;
+        
+        std::array<float_t*, m_num_harmonics> m_soundfield_matrix;
+        
+        // Convert ambisonic soundfield to binaural.
+        hoa::DecoderBinaural<hoa::Hoa3d, float_t> m_decoder;
+        std::array<float_t*, m_output_channels> m_binaural_output_matrix;
     };
 }
 

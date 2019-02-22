@@ -12,7 +12,9 @@ namespace HoaLibraryVR
     // ==================================================================================== //
     
     Source::Source(size_t order, size_t vectorsize)
-    : m_mono_input_buffer(vectorsize, 0.f)
+    : m_encoder(order)
+    , m_mono_input_buffer(vectorsize, 0.f)
+    , m_temp_harmonics(m_encoder.getNumberOfHarmonics(), 0.f)
     {}
     
     Source::~Source()
@@ -57,9 +59,21 @@ namespace HoaLibraryVR
         //std::copy(outputs, outputs + frames, outputs);
     }
     
-    std::vector<float_t>& Source::getBuffer()
+    void Source::process(float_t** outputs, size_t frames)
     {
-        return m_mono_input_buffer;
+        assert(frames == m_mono_input_buffer.size());
+        
+        auto* input = m_mono_input_buffer.data();
+        for(int i = 0; i < frames; ++i)
+        {
+            m_encoder.process(input, m_temp_harmonics.data());
+            for(int harmo = 0; harmo < m_temp_harmonics.size(); ++harmo)
+            {
+                outputs[harmo][i] += m_temp_harmonics[harmo];
+            }
+            
+            input++;
+        }
     }
     
     // ==================================================================================== //
@@ -70,34 +84,65 @@ namespace HoaLibraryVR
     : m_vectorsize(vectorsize)
     , m_source_id_counter(0)
     , m_master_gain(1.f)
-    {}
+    , m_decoder(m_order)
+    {
+        m_decoder.prepare(m_vectorsize);
+        
+        for(int channel = 0; channel < m_output_channels; ++channel)
+        {
+            m_binaural_output_matrix[channel] = new float[m_vectorsize];
+        }
+        
+        for(int harmonic = 0; harmonic < m_num_harmonics; ++harmonic)
+        {
+            m_soundfield_matrix[harmonic] = new float[m_vectorsize];
+        }
+    }
     
     HoaLibraryApi::~HoaLibraryApi()
-    {}
+    {
+        for(int i = 0; i < m_output_channels; ++i)
+        {
+            delete [] m_binaural_output_matrix[i];
+        }
+        
+        for(int i = 0; i < m_num_harmonics; ++i)
+        {
+            delete [] m_soundfield_matrix[i];
+        }
+    }
     
     bool HoaLibraryApi::fillInterleavedOutputBuffer(size_t frames, float_t* outputs)
     {
         // clear output buffer
-        std::fill(outputs, outputs + frames * 2, 0.f);
+        std::fill(outputs, outputs + frames * m_output_channels, 0.f);
+        
+        // clear encoded source matrix
+        for(float_t* harmonic_vec : m_soundfield_matrix)
+        {
+            std::fill(harmonic_vec, harmonic_vec + frames, 0.f);
+        }
         
         for(auto& source : m_sources)
         {
-            auto& mono_input_buffer = source.second->getBuffer();
-            
-            const size_t numouts = 2;
-            for (int i = 0; i < frames; ++i)
-            {
-                const auto value = mono_input_buffer[i];
-                
-                for(int channel = 0; channel < numouts; ++channel)
-                {
-                    outputs[i * numouts + channel] += value;
-                }
-            }
+            source.second->process(m_soundfield_matrix.data(), frames);
         }
         
-        std::transform(outputs, outputs + frames * 2, outputs,
-                       [gain = m_master_gain](auto& c){return c * gain;});
+        auto soundfield_matrix = const_cast<float_t const**>(m_soundfield_matrix.data());
+        
+        float_t** binaural_output_matrix = m_binaural_output_matrix.data();
+        
+        m_decoder.processBlock(soundfield_matrix, binaural_output_matrix);
+        
+        // convert matrix to interleaved vector and apply gain
+        const size_t numouts = 2;
+        for (int i = 0; i < frames; ++i)
+        {
+            for(int channel = 0; channel < numouts; ++channel)
+            {
+                outputs[i * numouts + channel] = binaural_output_matrix[channel][i] * m_master_gain;
+            }
+        }
         
         return true;
     }
