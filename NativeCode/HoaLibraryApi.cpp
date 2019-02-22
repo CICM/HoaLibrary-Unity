@@ -160,7 +160,8 @@ namespace HoaLibraryVR
     {
         const auto source_id = m_source_id_counter.fetch_add(1);
         assert(m_sources.find(source_id) == m_sources.end());
-        m_sources[source_id] = std::make_unique<Source>(m_order, m_vectorsize);
+        const auto order = m_order; // (silent symbol not found issue on osx)
+        m_sources[source_id] = std::make_unique<Source>(order, m_vectorsize);
         return source_id;
     }
     
