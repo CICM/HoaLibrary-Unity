@@ -14,14 +14,13 @@ public class SourceController : MonoBehaviour
 
   [Tooltip("Radius of the object")]
   [Range(0.0f, 20.0f)]
-  public float radius = 0;
+  public float radius = 8;
 
   const float TWO_PI = Mathf.PI * 2f;
 
   // Start is called before the first frame update
   void Start()
   {
-
   }
 
   // Update is called once per frame
