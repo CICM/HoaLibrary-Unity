@@ -60,6 +60,20 @@ namespace HoaLibraryVR
     // Source
     // ==================================================================================== //
     
+    struct CartesianCoordinate
+    {
+        float_t x = 0.f;
+        float_t y = 0.f;
+        float_t z = 0.f;
+    };
+    
+    struct PolarCoordinate
+    {
+        float_t radius = 0.f;
+        float_t azimuth = 0.f;
+        float_t elevation = 0.f;
+    };
+    
     class Source
     {
     public:
@@ -81,6 +95,8 @@ namespace HoaLibraryVR
         
         float_t m_gain = 1.f;
         float_t m_pan = 0.f;
+        
+        CartesianCoordinate m_source_position {};
         
         hoa::Encoder<hoa::Hoa3d, float_t> m_encoder;
         
@@ -174,6 +190,8 @@ namespace HoaLibraryVR
         static constexpr size_t m_num_harmonics = get_num_harmonics(m_order);
         
         const size_t m_vectorsize;
+        
+        CartesianCoordinate m_listener_position {};
         
         // Incremental source id counter.
         std::atomic<source_id_t> m_source_id_counter {0};

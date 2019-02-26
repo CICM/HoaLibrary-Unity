@@ -7,6 +7,24 @@ namespace HoaLibraryVR
         return new HoaLibraryApi(vectorsize);
     }
     
+    PolarCoordinate cartopol(CartesianCoordinate car)
+    {
+        PolarCoordinate pol;
+        
+        pol.radius = std::sqrtf(car.x * car.x + car.y * car.y + car.z * car.z);
+        
+        
+        pol.azimuth = (hoa::math<float_t>::pi_over_two()
+                       + ((car.x == 0.f && car.z == 0.f) ? 0.f : std::atan2f(car.z, car.x)));
+        
+        if(! (car.y == 0.f || pol.radius == 0.f))
+        {
+            pol.elevation = hoa::math<float_t>::two_pi() - std::asinf(car.y / pol.radius);
+        }
+        
+        return pol;
+    }
+    
     // ==================================================================================== //
     // Source
     // ==================================================================================== //
@@ -51,11 +69,19 @@ namespace HoaLibraryVR
     
     void Source::setPosition(float_t x, float_t y, float_t z)
     {
+        m_source_position = {x, y, z};
     }
     
     void Source::process(float_t** outputs, size_t frames)
     {
         assert(frames == m_mono_input_buffer.size());
+        
+        auto polar_coords = cartopol(m_source_position);
+        
+        // we do not use radius for now
+        //m_encoder.setRadius(polar_coords.radius);
+        m_encoder.setAzimuth(polar_coords.azimuth);
+        m_encoder.setElevation(polar_coords.elevation);
         
         auto* input = m_mono_input_buffer.data();
         for(int i = 0; i < frames; ++i)
@@ -148,7 +174,7 @@ namespace HoaLibraryVR
     
     void HoaLibraryApi::setHeadPosition(float_t x, float_t y, float_t z)
     {
-        
+        m_listener_position = {x, y, z};
     }
     
     void HoaLibraryApi::setHeadRotation(float_t x, float_t y, float_t z, float_t w)
@@ -187,7 +213,9 @@ namespace HoaLibraryVR
         auto source = m_sources.find(source_id);
         if(source != m_sources.end())
         {
-            source->second->setPosition(x, y, z);
+            source->second->setPosition(x - m_listener_position.x,
+                                        y - m_listener_position.y,
+                                        z - m_listener_position.z);
         }
     }
     

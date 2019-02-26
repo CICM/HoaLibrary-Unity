@@ -35,8 +35,6 @@ namespace HoaLibraryVR
     //! @brief Sets the stereo pan
     void SetSourcePan(source_id_t id, float_t pan);
     
-    //! @brief Updates the position, rotation and scale of the source.
-    void SetSourceTransform(HoaLibraryApi::source_id_t id,
-                            float_t px, float_t py, float_t pz,
-                            float_t qx, float_t qy, float_t qz, float_t qw);
+    //! @brief Updates the position of the source.
+    void SetSourcePosition(HoaLibraryApi::source_id_t id, float_t px, float_t py, float_t pz);
 }

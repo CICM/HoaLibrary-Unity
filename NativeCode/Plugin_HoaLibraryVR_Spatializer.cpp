@@ -133,44 +133,30 @@ namespace HoaLibraryVR_Spatializer
             const auto& spatinfos = *state->spatializerdata;
             const auto pan = spatinfos.stereopan; // [-1 to 1]
             
-            auto const* s = spatinfos.sourcematrix;
+            auto const* sm = spatinfos.sourcematrix;
+            auto const* lm = spatinfos.listenermatrix;
             
             // Currently we ignore source orientation and only use the position
-            const float_t pos_x = s[12];
-            const float_t pos_y = s[13];
-            const float_t pos_z = s[14];
+            const float_t pos_x = sm[12];
+            const float_t pos_y = sm[13];
+            const float_t pos_z = sm[14];
+            
+            const float_t dir_x = lm[0] * pos_x + lm[4] * pos_y + lm[ 8] * pos_z + lm[12];
+            const float_t dir_y = lm[1] * pos_x + lm[5] * pos_y + lm[ 9] * pos_z + lm[13];
+            const float_t dir_z = lm[2] * pos_x + lm[6] * pos_y + lm[10] * pos_z + lm[14];
+            
+            /*
+             auto const* lm = spatinfos.listenermatrix;
+             const float_t listener_pos_x = -(lm[0] * lm[12] + lm[ 1] * lm[13] + lm[ 2] * lm[14]);
+             const float_t listener_pos_y = -(lm[4] * lm[12] + lm[ 5] * lm[13] + lm[ 6] * lm[14]);
+             const float_t listener_pos_z = -(lm[8] * lm[12] + lm[ 9] * lm[13] + lm[10] * lm[14]);
+            */
+            
+            // HoaLibraryVR::SetListenerTransform(listener_pos_x, listener_pos_y, listener_pos_z, 0.f, 0.f, 0.f, 0.f);
             
             HoaLibraryVR::SetSourcePan(m_source_id, pan);
-            
-            HoaLibraryVR::SetSourceTransform(m_source_id,
-                                             pos_x, pos_y, pos_z,
-                                             0.f, 0.f, 0.f, 0.f);
-            
+            HoaLibraryVR::SetSourcePosition(m_source_id, dir_x, dir_y, dir_z);
             HoaLibraryVR::ProcessSource(m_source_id, length, inputs);
-
-            /*
-            static const float_t kRad2Deg = 180.0f / kPI;
-
-            auto const* m = spatinfos.listenermatrix;
-            float_t dir_x = m[0] * pos_x + m[4] * pos_y + m[8] * pos_z + m[12];
-            float_t dir_y = m[1] * pos_x + m[5] * pos_y + m[9] * pos_z + m[13];
-            float_t dir_z = m[2] * pos_x + m[6] * pos_y + m[10] * pos_z + m[14];
-            
-            float azimuth = (fabsf(dir_z) < 0.001f) ? 0.0f : atan2f(dir_x, dir_z);
-            if (azimuth < 0.0f)
-            {
-                azimuth += 2.0f * kPI;
-            }
-            
-            azimuth = FastClip(azimuth * kRad2Deg, 0.0f, 360.0f);
-            
-            const float_t elevation = atan2f(dir_y, sqrtf(dir_x * dir_x + dir_z * dir_z) + 0.001f) * kRad2Deg;
-            float_t spatialblend = spatinfos.spatialblend;
-            float_t reverbmix = spatinfos.reverbzonemix;
-            float_t stereopan = spatinfos.stereopan;
-            float_t spread = cosf(spatinfos.spread * kPI / 360.0f);
-            float_t spreadmatrix[2] = { 2.0f - spread, spread };
-            */
         }
         
     private:

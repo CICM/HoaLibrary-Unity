@@ -120,17 +120,12 @@ namespace HoaLibraryVR {
         }
     }
     
-    void SetSourceTransform(HoaLibraryApi::source_id_t id,
-                            float_t px, float_t py, float_t pz,
-                            float_t qx, float_t qy, float_t qz, float_t qw)
+    void SetSourcePosition(HoaLibraryApi::source_id_t id, float_t px, float_t py, float_t pz)
     {
         auto hoalib_copy = hoalib;
         if (hoalib_copy != nullptr)
         {
             hoalib_copy->api->setSourcePosition(id, px, py, pz);
-            
-            // source rotation is not supported yet
-            // hoalib_copy->api->setSourceRotation(id, qx, qy, qz, qw);
         }
     }
 }
