@@ -49,3 +49,5 @@ Assets/Plugins.meta
 
 # Unity generated
 Assets/Plugins
+*.csproj
+*.sln

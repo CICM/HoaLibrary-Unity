@@ -1,3 +1,7 @@
+//==============================================================================
+// From the Unity [nativeaudioplugins](https://bitbucket.org/Unity-Technologies/nativeaudioplugins) SDK.
+//==============================================================================
+
 #pragma once
 
 #define UNITY_AUDIO_PLUGIN_API_VERSION 0x010402

@@ -6,7 +6,7 @@ AudioMixerController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: MainAudioMixer
+  m_Name: HoaLibraryVRAudioMixer
   m_OutputGroup: {fileID: 0}
   m_MasterGroup: {fileID: 24300002}
   m_Snapshots:
@@ -35,7 +35,7 @@ AudioMixerGroupController:
   m_Volume: 645b8c6c8a37f4925931e064853eb586
   m_Pitch: 08ae2e8b71d4d4cc2b90be1240d8903a
   m_Effects:
-  - {fileID: 244053171239775026}
+  - {fileID: 244703052301943684}
   - {fileID: 24400004}
   m_UserColorIndex: 0
   m_Mute: 0
@@ -64,25 +64,27 @@ AudioMixerSnapshotController:
   m_Name: Snapshot
   m_AudioMixer: {fileID: 24100000}
   m_SnapshotID: 3749e0db7e45744c69a442a4a0dfc472
-  m_FloatValues: {}
+  m_FloatValues:
+    d1407145bda504624aa59a3750f42192: 0
+    645b8c6c8a37f4925931e064853eb586: 0
+    a8d0d3ae0b4b242c8b4faf2234b4ff89: 0.553
+    4d174bbf4b7af4b5a97d5f99119c910c: 0.583
   m_TransitionOverrides: {}
---- !u!244 &244053171239775026
+--- !u!244 &244703052301943684
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_EffectID: 4b43225b07692440a8a7c1f4e305ea97
+  m_EffectID: 23bd1c6f9d9254220ac8d14589118502
   m_EffectName: HoaLibrary VR Renderer
-  m_MixLevel: 13eaff678a0484a53b6d10fc044ac28f
+  m_MixLevel: 81524188be7b94a3291d8c47bdb58c6a
   m_Parameters:
-  - m_ParameterName: AudioSrc Attn
-    m_GUID: 6e2ef0185d44542fe806d643157774d7
-  - m_ParameterName: Fixed Volume
-    m_GUID: 845245eaf665441a78b65be052d046fc
-  - m_ParameterName: Custom Falloff
-    m_GUID: 3061cd7ba518a42c28cd70b7b40d0e09
+  - m_ParameterName: Output Gain
+    m_GUID: a8d0d3ae0b4b242c8b4faf2234b4ff89
+  - m_ParameterName: Master Gain
+    m_GUID: d1407145bda504624aa59a3750f42192
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
