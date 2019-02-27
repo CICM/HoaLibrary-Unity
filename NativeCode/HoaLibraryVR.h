@@ -19,10 +19,6 @@ namespace HoaLibraryVR
     //! @brief Updates the listener's master gain.
     void SetMasterGain(float_t gain);
     
-    //! @brief Updates the listener's position and rotation.
-    void SetListenerTransform(float_t px, float_t py, float_t pz,
-                              float_t qx, float_t qy, float_t qz, float_t qw);
-    
     //! @brief Creates an object audio source to be spatialized.
     source_id_t CreateSource();
     
@@ -36,5 +32,6 @@ namespace HoaLibraryVR
     void SetSourcePan(source_id_t id, float_t pan);
     
     //! @brief Updates the position of the source.
-    void SetSourcePosition(HoaLibraryApi::source_id_t id, float_t px, float_t py, float_t pz);
+    void SetSourcePosition(HoaLibraryApi::source_id_t id,
+                           float_t px, float_t py, float_t pz);
 }

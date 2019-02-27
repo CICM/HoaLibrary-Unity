@@ -60,17 +60,6 @@ namespace HoaLibraryVR {
         }
     }
     
-    void SetListenerTransform(float_t px, float_t py, float_t pz,
-                              float_t qx, float_t qy, float_t qz, float_t qw)
-    {
-        auto hoalib_copy = hoalib;
-        if (hoalib_copy != nullptr)
-        {
-            hoalib_copy->api->setHeadPosition(px, py, pz);
-            hoalib_copy->api->setHeadRotation(qx, qy, qz, qw);
-        }
-    }
-    
     HoaLibraryApi::source_id_t CreateSource()
     {
         auto id = HoaLibraryApi::invalid_source_id;

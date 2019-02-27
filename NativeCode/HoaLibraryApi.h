@@ -135,19 +135,6 @@ namespace HoaLibraryVR
         //! @return True if a valid output was successfully rendered, false otherwise.
         bool fillInterleavedOutputBuffer(size_t num_frames, float_t* buffer_ptr);
         
-        //! @brief Sets listener's head position.
-        //! @param x X coordinate of head position in world space.
-        //! @param y Y coordinate of head position in world space.
-        //! @param z Z coordinate of head position in world space.
-        void setHeadPosition(float_t x, float_t y, float_t z);
-        
-        //! @brief Sets listener's head rotation.
-        //! @param x X component of quaternion.
-        //! @param y Y component of quaternion.
-        //! @param z Z component of quaternion.
-        //! @param w W component of quaternion.
-        void setHeadRotation(float_t x, float_t y, float_t z, float_t w);
-        
         //! @brief Creates a sound object source instance.
         //! @param rendering_mode Rendering mode which governs quality and performance.
         //! @return Id of new source.
@@ -190,8 +177,6 @@ namespace HoaLibraryVR
         static constexpr size_t m_num_harmonics = get_num_harmonics(m_order);
         
         const size_t m_vectorsize;
-        
-        CartesianCoordinate m_listener_position {};
         
         // Incremental source id counter.
         std::atomic<source_id_t> m_source_id_counter {0};

@@ -145,15 +145,6 @@ namespace HoaLibraryVR_Spatializer
             const float_t dir_y = lm[1] * pos_x + lm[5] * pos_y + lm[ 9] * pos_z + lm[13];
             const float_t dir_z = lm[2] * pos_x + lm[6] * pos_y + lm[10] * pos_z + lm[14];
             
-            /*
-             auto const* lm = spatinfos.listenermatrix;
-             const float_t listener_pos_x = -(lm[0] * lm[12] + lm[ 1] * lm[13] + lm[ 2] * lm[14]);
-             const float_t listener_pos_y = -(lm[4] * lm[12] + lm[ 5] * lm[13] + lm[ 6] * lm[14]);
-             const float_t listener_pos_z = -(lm[8] * lm[12] + lm[ 9] * lm[13] + lm[10] * lm[14]);
-            */
-            
-            // HoaLibraryVR::SetListenerTransform(listener_pos_x, listener_pos_y, listener_pos_z, 0.f, 0.f, 0.f, 0.f);
-            
             HoaLibraryVR::SetSourcePan(m_source_id, pan);
             HoaLibraryVR::SetSourcePosition(m_source_id, dir_x, dir_y, dir_z);
             HoaLibraryVR::ProcessSource(m_source_id, length, inputs);

@@ -91,8 +91,11 @@ namespace HoaLibraryVR_Renderer
             const bool is_paused = state->flags & (UnityAudioEffectStateFlags_IsPaused);
             const bool is_playing = state->flags & (UnityAudioEffectStateFlags_IsPlaying);
             
+            const int stereo = 2;
+            
             // Check that I/O formats are right
-            if ((numins != 2 || numouts != 2) || (is_muted || is_paused || !is_playing))
+            if ((numins != stereo || numouts != stereo)
+                || (is_muted || is_paused || !is_playing))
             {
                 // fill with zeros
                 std::fill(outputs, outputs + length * numouts, 0.f);

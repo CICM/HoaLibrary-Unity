@@ -172,16 +172,6 @@ namespace HoaLibraryVR
         m_master_gain = gain;
     }
     
-    void HoaLibraryApi::setHeadPosition(float_t x, float_t y, float_t z)
-    {
-        m_listener_position = {x, y, z};
-    }
-    
-    void HoaLibraryApi::setHeadRotation(float_t x, float_t y, float_t z, float_t w)
-    {
-        
-    }
-    
     auto HoaLibraryApi::createSource() -> source_id_t
     {
         const auto source_id = m_source_id_counter.fetch_add(1);
@@ -213,9 +203,7 @@ namespace HoaLibraryVR
         auto source = m_sources.find(source_id);
         if(source != m_sources.end())
         {
-            source->second->setPosition(x - m_listener_position.x,
-                                        y - m_listener_position.y,
-                                        z - m_listener_position.z);
+            source->second->setPosition(x, y, z);
         }
     }
     
