@@ -44,4 +44,7 @@ namespace HoaLibraryVR
     //! @brief Updates the position of the source.
     void SetSourcePosition(HoaLibraryApi::source_id_t id,
                            float_t px, float_t py, float_t pz);
+    
+    //! @brief Sets the source ambisonic optimization.
+    void SetSourceOptim(HoaLibraryApi::source_id_t id, int optim);
 }

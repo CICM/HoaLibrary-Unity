@@ -41,9 +41,12 @@ namespace HoaLibraryVR
     
     Source::Source(size_t order, size_t vectorsize)
     : m_encoder(order)
+    , m_optim(order)
     , m_mono_input_buffer(vectorsize, 0.f)
     , m_temp_harmonics(m_encoder.getNumberOfHarmonics(), 0.f)
-    {}
+    {
+        m_optim.setMode(optim_mode_t::Basic);
+    }
     
     Source::~Source()
     {}
@@ -51,6 +54,15 @@ namespace HoaLibraryVR
     void Source::setPan(float_t pan)
     {
         m_pan = pan;
+    }
+    
+    void Source::setOptim(int optim_int)
+    {
+        auto optim = static_cast<optim_mode_t>(optim_int);
+        if(optim != m_optim.getMode())
+        {
+            m_optim.setMode(optim);
+        }
     }
     
     void Source::setGain(float_t gain)
@@ -93,13 +105,22 @@ namespace HoaLibraryVR
         m_encoder.setAzimuth(polar_coords.azimuth);
         m_encoder.setElevation(polar_coords.elevation);
         
+        const bool process_optim = m_optim.getMode() != optim_mode_t::Basic;
+        
         auto* input = m_mono_input_buffer.data();
         for(int i = 0; i < frames; ++i)
         {
-            m_encoder.process(input, m_temp_harmonics.data());
+            auto* harmonics = m_temp_harmonics.data();
+            m_encoder.process(input, harmonics);
+            
+            if(process_optim)
+            {
+                m_optim.process(harmonics, harmonics);
+            }
+            
             for(int harmo = 0; harmo < m_temp_harmonics.size(); ++harmo)
             {
-                outputs[harmo][i] += m_temp_harmonics[harmo];
+                outputs[harmo][i] += harmonics[harmo];
             }
             
             input++;
@@ -232,6 +253,15 @@ namespace HoaLibraryVR
         if(source != m_sources.end())
         {
             source->second->setGain(volume);
+        }
+    }
+    
+    void HoaLibraryApi::setSourceOptim(source_id_t source_id, int optim)
+    {
+        auto source = m_sources.find(source_id);
+        if(source != m_sources.end())
+        {
+            source->second->setOptim(optim);
         }
     }
 }

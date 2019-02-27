@@ -52,7 +52,7 @@ namespace HoaLibraryVR
     class HoaLibraryApi;
     
     //! @brief Returns the number of harmonics depending on an ambisonic order.
-    static constexpr size_t get_num_harmonics(const size_t order)
+    static constexpr size_t get_num_harmonics_for_order(const size_t order)
     {
         return (order + 1) * (order + 1);
     }
@@ -95,6 +95,8 @@ namespace HoaLibraryVR
         
         void setPan(float_t pan);
         
+        void setOptim(int optim);
+        
         void setInterleavedBuffer(float_t const* inputs, size_t frames);
         
         void setPosition(float_t x, float_t y, float_t z);
@@ -108,7 +110,12 @@ namespace HoaLibraryVR
         
         CartesianCoordinate m_source_position {};
         
-        hoa::Encoder<hoa::Hoa3d, float_t> m_encoder;
+        using encoder_t = hoa::Encoder<hoa::Hoa3d, float_t>;
+        using optim_t = hoa::Optim<hoa::Hoa3d, float_t>;
+        using optim_mode_t = hoa::Optim<hoa::Hoa3d, float_t>::Mode;
+        
+        encoder_t m_encoder;
+        optim_t m_optim;
         
         std::vector<float_t> m_mono_input_buffer {};
         std::vector<float_t> m_temp_harmonics {};
@@ -180,11 +187,14 @@ namespace HoaLibraryVR
         //! attenuation, range [1, inf) for gain boost.
         void setSourceGain(source_id_t source_id, float_t volume);
         
+        //! @brief Sets the source optimization.
+        void setSourceOptim(source_id_t source_id, int optim);
+        
     private:
         
         static constexpr size_t m_output_channels = 2;
         static constexpr size_t m_order = 5;
-        static constexpr size_t m_num_harmonics = get_num_harmonics(m_order);
+        static constexpr size_t m_num_harmonics = get_num_harmonics_for_order(m_order);
         
         const size_t m_vectorsize;
         

@@ -127,4 +127,13 @@ namespace HoaLibraryVR {
             hoalib_copy->api->setSourcePosition(id, px, py, pz);
         }
     }
+    
+    void SetSourceOptim(HoaLibraryApi::source_id_t id, int optim)
+    {
+        auto hoalib_copy = hoalib;
+        if (hoalib_copy != nullptr)
+        {
+            hoalib_copy->api->setSourceOptim(id, optim);
+        }
+    }
 }
