@@ -14,13 +14,13 @@ public class HoaLibraryVRAudioSource : MonoBehaviour {
 
   /// Ambisonic optimization.
   public enum Optim {
-    Basic = 0,  ///< No effect.
-    MaxRe = 1,  ///< Low quality binaural rendering (first-order HRTF).
-    InPhase = 2  ///< High quality binaural rendering (third-order HRTF).
+    Basic = 0,    ///< Has no effect.
+    MaxRe = 1,    ///< Energy vector optimization.
+    InPhase = 2   ///< Energy and velocity vector optimization
   }
 
   /// Input gain in decibels.
-  // [Tooltip("Applies a gain to the source for adjustment of relative loudness.")]
+  // [Tooltip("Applies a gain to the source")]
   // [Range(-120.0f, 50.0f)]
   // public float gain = 0.0f;
 
@@ -33,10 +33,10 @@ public class HoaLibraryVRAudioSource : MonoBehaviour {
 
   // Native audio spatializer effect data.
   private enum EffectData {
-    DistanceAttenuation = 0, // Computed distance attenuation.
-    Gain = 1,  // Gain.
-    CustomFalloff = 2,
-    Optim = 3,  // Source audio rendering quality.
+    DistanceAttenuation = 0,    // Distance attenuation.
+    Gain = 1,                   // Gain.
+    CustomFalloff = 2,          // Custom Falloff
+    Optim = 3,                  // Optimization.
   }
 
   void Awake() {
