@@ -32,10 +32,10 @@ namespace HoaLibraryVR_Renderer
     public:
         
         // parameters
-        enum
+        enum Param
         {
-            P_MASTER_GAIN,
-            P_NUM
+            MasterGain,
+            Size
         };
         
         HoaAudioProcessor() = default;
@@ -43,12 +43,12 @@ namespace HoaLibraryVR_Renderer
         
         static int registerEffect(effect_definition_t& definition)
         {
-            int numparams = P_NUM;
+            int numparams = Param::Size;
             definition.paramdefs = new param_definition_t[numparams];
             
             RegisterParameter(definition, "Master Gain", "dB",
                               -120.f, 50.f, 0.0f, 1.0f, 1.0f,
-                              P_MASTER_GAIN, "Master Gain");
+                              Param::MasterGain, "Master Gain");
             
             return numparams;
         }
@@ -71,7 +71,7 @@ namespace HoaLibraryVR_Renderer
         
         bool setFloatParameter(effect_state_t* state, int index, float_t value)
         {
-            if (index >= P_NUM)
+            if (index >= Param::Size)
                 return false;
             
             p[index] = value;
@@ -81,7 +81,7 @@ namespace HoaLibraryVR_Renderer
         
         bool getFloatParameter(effect_state_t* state, int index, float_t* value, char *valuestr)
         {
-            if (index >= P_NUM)
+            if (index >= Param::Size)
                 return false;
             
             if (value)
@@ -118,7 +118,7 @@ namespace HoaLibraryVR_Renderer
                 return;
             }
             
-            const auto gain = std::powf(10.f, p[P_MASTER_GAIN] * 0.05f);
+            const auto gain = std::powf(10.f, p[Param::MasterGain] * 0.05f);
             
             HoaLibraryVR::SetMasterGain(gain);
             HoaLibraryVR::ProcessListener(length, outputs);
@@ -126,7 +126,7 @@ namespace HoaLibraryVR_Renderer
         
     private:
         
-        std::array<float_t, P_NUM> p;
+        std::array<float_t, Param::Size> p;
     };
     
     #include "UnityCallbacks.hpp"

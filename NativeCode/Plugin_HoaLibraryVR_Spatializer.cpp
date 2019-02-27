@@ -33,12 +33,13 @@ namespace HoaLibraryVR_Spatializer
     public:
         
         // parameters
-        enum
+        enum Param
         {
-            P_AUDIOSRC_ATTN,
-            P_FIXEDVOLUME,
-            P_CUSTOMFALLOFF,
-            P_NUM
+            DistanceAttenuation,
+            Gain,
+            CustomFalloff,
+            Optim,
+            Size
         };
         
         HoaAudioProcessor() = default;
@@ -46,20 +47,24 @@ namespace HoaLibraryVR_Spatializer
         
         static int registerEffect(effect_definition_t& definition)
         {
-            int numparams = P_NUM;
+            const int numparams = Param::Size;
             definition.paramdefs = new param_definition_t[numparams];
             
-            RegisterParameter(definition, "AudioSrc Attn", "",
-                              0.0f, 1.0f, 1.0f, 1.0f, 1.0f, P_AUDIOSRC_ATTN,
+            RegisterParameter(definition, "DistanceAttenuation", "",
+                              0.0f, 1.0f, 1.0f, 1.0f, 1.0f, Param::DistanceAttenuation,
                               "AudioSource distance attenuation");
             
-            RegisterParameter(definition, "Fixed Volume", "",
-                              0.0f, 1.0f, 0.0f, 1.0f, 1.0f, P_FIXEDVOLUME,
+            RegisterParameter(definition, "Gain", "",
+                              0.0f, 1.0f, 0.0f, 1.0f, 1.0f, Param::Gain,
                               "Fixed volume amount");
             
             RegisterParameter(definition, "Custom Falloff", "",
-                              0.0f, 1.0f, 0.0f, 1.0f, 1.0f, P_CUSTOMFALLOFF,
+                              0.0f, 1.0f, 0.0f, 1.0f, 1.0f, Param::CustomFalloff,
                               "Custom volume falloff amount (logarithmic)");
+            
+            RegisterParameter(definition, "Optim", "",
+                              0.0f, 2.0f, 0.0f, 1.0f, 1.0f, Param::Optim,
+                              "Ambisonic optimization (Basic | MaxRe | inPhase)");
             
             // required flag to be recognized as a spatialiser plugin by unity
             definition.flags |= UnityAudioEffectDefinitionFlags_IsSpatializer;
@@ -88,7 +93,7 @@ namespace HoaLibraryVR_Spatializer
         
         bool setFloatParameter(effect_state_t* state, int index, float_t value)
         {
-            if (index >= P_NUM)
+            if (index >= Param::Size)
                 return false;
             
             p[index] = value;
@@ -97,7 +102,7 @@ namespace HoaLibraryVR_Spatializer
         
         bool getFloatParameter(effect_state_t* state, int index, float_t* value, char *valuestr)
         {
-            if (index >= P_NUM)
+            if (index >= Param::Size)
                 return false;
             
             if (value)
@@ -123,8 +128,8 @@ namespace HoaLibraryVR_Spatializer
         
         float getAttenuation(effect_state_t* state, float_t distanceIn, float_t attenuationIn)
         {
-            return (p[P_AUDIOSRC_ATTN] * attenuationIn + p[P_FIXEDVOLUME] +
-                    p[P_CUSTOMFALLOFF] * (1.0f / FastMax(1.0f, distanceIn)));
+            return (p[Param::DistanceAttenuation] * attenuationIn + p[Param::Gain] +
+                    p[Param::CustomFalloff] * (1.0f / FastMax(1.0f, distanceIn)));
         }
         
         void process(effect_state_t* state,
@@ -142,6 +147,7 @@ namespace HoaLibraryVR_Spatializer
             
             const auto& spatinfos = *state->spatializerdata;
             const auto pan = spatinfos.stereopan; // [-1 to 1]
+            const int optimization = static_cast<int>(p[Param::Optim]);
             
             auto const* sm = spatinfos.sourcematrix;
             auto const* lm = spatinfos.listenermatrix;
@@ -157,6 +163,7 @@ namespace HoaLibraryVR_Spatializer
             
             HoaLibraryVR::SetSourcePan(m_source_id, pan);
             HoaLibraryVR::SetSourcePosition(m_source_id, dir_x, dir_y, dir_z);
+            HoaLibraryVR::SetSourceOptim(m_source_id, optimization);
             HoaLibraryVR::ProcessSource(m_source_id, length, inputs);
         }
         
@@ -173,7 +180,7 @@ namespace HoaLibraryVR_Spatializer
         
     private:
         
-        std::array<float_t, P_NUM> p;
+        std::array<float_t, Param::Size> p;
         
         source_id_t m_source_id = HoaLibraryApi::invalid_source_id;
     };
