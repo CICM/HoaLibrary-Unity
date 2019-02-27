@@ -1,4 +1,14 @@
-// Please note that this will only work on Unity 5.2 or higher.
+//==============================================================================
+// Copyright (c) 2019, Eliott Paris, CICM, ArTeC.
+// For information on usage and redistribution, and for a DISCLAIMER OF ALL
+// WARRANTIES, see the file, "LICENSE.txt," in this distribution.
+//
+// Thirdparty :
+// - [HoaLibrary-Light](https://github.com/CICM/HoaLibrary-Light)
+// - Unity [nativeaudioplugins](https://bitbucket.org/Unity-Technologies/nativeaudioplugins) SDK.
+//==============================================================================
+
+// Please note that this plugin will only work on Unity 5.2 or higher.
 
 #include "HoaLibraryVR.h"
 

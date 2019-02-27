@@ -1,3 +1,7 @@
+//==============================================================================
+// From the Unity [nativeaudioplugins](https://bitbucket.org/Unity-Technologies/nativeaudioplugins) SDK.
+//==============================================================================
+
 #include "AudioPluginUtil.h"
 #include <stdarg.h>
 
