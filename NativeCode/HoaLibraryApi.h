@@ -193,7 +193,7 @@ namespace HoaLibraryVR
     private:
         
         static constexpr size_t m_output_channels = 2;
-        static constexpr size_t m_order = 5;
+        static constexpr size_t m_order = 3;
         static constexpr size_t m_num_harmonics = get_num_harmonics_for_order(m_order);
         
         const size_t m_vectorsize;
