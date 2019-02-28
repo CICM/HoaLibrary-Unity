@@ -61,12 +61,21 @@ namespace HoaLibraryVR {
         }
     }
     
-    void SetMasterGain(float gain)
+    void SetMasterGain(float_t gain)
     {
         auto hoalib_copy = hoalib;
         if (hoalib_copy != nullptr)
         {
             hoalib_copy->api->setMasterGain(gain);
+        }
+    }
+    
+    void SetResponseTime(float_t response_time)
+    {
+        auto hoalib_copy = hoalib;
+        if (hoalib_copy != nullptr)
+        {
+            hoalib_copy->api->setResponseTime(response_time);
         }
     }
     
