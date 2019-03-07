@@ -100,8 +100,9 @@ namespace HoaLibraryVR
         
         auto polar_coords = cartopol(m_source_position);
         
-        // we do not use radius for now
-        //m_encoder.setRadius(polar_coords.radius);
+        // We let unity provide gain attenuation when the source is farther than 1 meter.
+        // @todo Set it to "minimum distance" instead of the arbitrary 1 meter value.
+        m_encoder.setRadius(std::min<float_t>(polar_coords.radius, 1.0f));
         m_encoder.setAzimuth(polar_coords.azimuth);
         m_encoder.setElevation(polar_coords.elevation);
         
