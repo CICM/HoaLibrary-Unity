@@ -23,13 +23,13 @@ namespace HoaLibraryVR
         
         pol.radius = std::sqrtf(car.x * car.x + car.y * car.y + car.z * car.z);
         
-        
-        pol.azimuth = (hoa::math<float_t>::pi_over_two()
-                       + ((car.x == 0.f && car.z == 0.f) ? 0.f : std::atan2f(car.z, car.x)));
+        // azimuth 0 in hoa system is in front.
+        pol.azimuth = (((car.x == 0.f && car.z == 0.f) ? 0.f : std::atan2f(car.z, car.x))
+                       - hoa::math<float_t>::pi_over_two());
         
         if(! (car.y == 0.f || pol.radius == 0.f))
         {
-            pol.elevation = hoa::math<float_t>::two_pi() - std::asinf(car.y / pol.radius);
+            pol.elevation = std::asinf(car.y / pol.radius);
         }
         
         return pol;
