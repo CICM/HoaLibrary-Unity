@@ -35,6 +35,9 @@
 *.xcuserstate
 *.xcuserdatad
 
+# VS
+.vs
+
 # build folder
 NativeCode/Xcode/build/
 
