@@ -50,7 +50,7 @@ namespace HoaLibraryVR_Spatializer
             const int numparams = Param::Size;
             definition.paramdefs = new param_definition_t[numparams];
             
-            RegisterParameter(definition, "DistanceAttenuation", "",
+            RegisterParameter(definition, "Attenuation", "",
                               0.0f, 1.0f, 1.0f, 1.0f, 1.0f, Param::DistanceAttenuation,
                               "AudioSource distance attenuation");
             
