@@ -20,6 +20,21 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
+if (MSVC)
+  option(STATIC_MSVC_RUNTIME "Static linkage of MSVC runtime" ON)
+  SET(MSVC_RUNTIME_FLAG "/MT" CACHE STRING "MSVC Runtime flag")
+  if (STATIC_MSVC_RUNTIME)
+      SET(MSVC_RUNTIME_FLAG "/MT")
+  else ()
+      SET(MSVC_RUNTIME_FLAG "/MD")
+  endif ()
+  message(STATUS "MSVC Runtime flag: ${MSVC_RUNTIME_FLAG}")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${MSVC_RUNTIME_FLAG}" CACHE INTERNAL "" FORCE)
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${MSVC_RUNTIME_FLAG}d" CACHE INTERNAL "" FORCE)
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} ${MSVC_RUNTIME_FLAG}" CACHE INTERNAL "" FORCE)
+  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} ${MSVC_RUNTIME_FLAG}d" CACHE INTERNAL "" FORCE)
+endif ()
+
 #--------------------------------------
 # Sources
 #--------------------------------------
@@ -56,12 +71,11 @@ target_include_directories(AudioPluginHoaLibraryVR PUBLIC ${HOALIBRARY_SOURCES_D
 # Properties
 #--------------------------------------
 
-set(WHOLE_ARCHIVE_FLAGS "")
 if (APPLE)
     set_target_properties(AudioPluginHoaLibraryVR PROPERTIES LINK_FLAGS "-Wl,-all_load")
     set_target_properties(AudioPluginHoaLibraryVR PROPERTIES PREFIX "" SUFFIX ".bundle")
 elseif (MSVC)
-    set_target_properties(AudioPluginHoaLibraryVR PROPERTIES LINK_FLAGS "/MANIFEST:NO ${WHOLE_ARCHIVE_FLAGS}")
+    set_target_properties(AudioPluginHoaLibraryVR PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 endif ()
 
 #--------------------------------------
