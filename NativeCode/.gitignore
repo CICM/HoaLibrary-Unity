@@ -1,2 +1,7 @@
 # ignore build files
 /build/*
+
+# VS generated
+*.dir/*
+/x64/*
+/x86-64/*
