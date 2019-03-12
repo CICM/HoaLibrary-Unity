@@ -41,6 +41,7 @@
 
 #include <assert.h>
 #include <atomic>
+#include <memory>
 #include <vector>
 #include <array>
 #include <unordered_map>
