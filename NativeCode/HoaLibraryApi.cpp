@@ -207,7 +207,7 @@ namespace HoaLibraryVR
     void HoaLibraryApi::setResponseTime(float_t response_time)
     {
         // 20% seems good !
-        const auto size = hoa::Hrir<hoa::Hoa3d, float>::getNumberOfRows();
+        const auto size = decoder_t::hrir_t::getNumberOfRows();
         const auto newsize = size * static_cast<size_t>(response_time) / 100;
         m_decoder.setCropSize(newsize);
     }

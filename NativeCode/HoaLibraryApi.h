@@ -210,8 +210,9 @@ namespace HoaLibraryVR
         
         std::array<float_t*, m_num_harmonics> m_soundfield_matrix;
         
-        // Convert ambisonic soundfield to binaural.
-        hoa::DecoderBinaural<hoa::Hoa3d, float_t> m_decoder;
+        using decoder_t = hoa::DecoderBinaural<hoa::Hoa3d, float_t>;
+        decoder_t m_decoder;
+        
         std::array<float_t*, m_output_channels> m_binaural_output_matrix;
     };
 }
