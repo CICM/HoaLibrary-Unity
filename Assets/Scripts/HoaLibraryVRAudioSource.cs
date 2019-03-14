@@ -20,9 +20,9 @@ public class HoaLibraryVRAudioSource : MonoBehaviour {
   }
 
   /// Input gain in decibels.
-  // [Tooltip("Applies a gain to the source")]
-  // [Range(-120.0f, 50.0f)]
-  // public float gain = 0.0f;
+  [Tooltip("Additional gain for this source")]
+  [Range(0.0f, 20.0f)]
+  public float gain = 0.0f;
 
   /// Rendering quality of the audio source.
   [Tooltip("Sets the ambisonic optimization mode for this source (Basic | MaxRe | InPhase)")]
@@ -61,7 +61,7 @@ public class HoaLibraryVRAudioSource : MonoBehaviour {
 
   void Update() {
     if (audioSource.spatialize) {
-      // audioSource.SetSpatializerFloat((int) EffectData.Gain, gain);
+      audioSource.SetSpatializerFloat((int) EffectData.Gain, gain);
       audioSource.SetSpatializerFloat((int) EffectData.Optim, (float) optim);
     }
   }

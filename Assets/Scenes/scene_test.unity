@@ -413,6 +413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346d349cbfbb7442498aecfdc8fd9f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gain: 0
   optim: 0
 --- !u!1 &1156031699
 GameObject:
@@ -1117,4 +1118,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346d349cbfbb7442498aecfdc8fd9f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gain: 0
   optim: 0

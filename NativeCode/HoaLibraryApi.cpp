@@ -84,7 +84,7 @@ namespace HoaLibraryVR
         {
             // mono mix
             *output++ = (((*input) * left_gain)
-                         + ((*(input+1)) * right_gain));
+                         + ((*(input+1)) * right_gain)) * m_gain;
             input += 2;
         }
     }

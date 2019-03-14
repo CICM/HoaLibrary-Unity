@@ -54,9 +54,9 @@ namespace HoaLibraryVR_Spatializer
                               0.0f, 1.0f, 1.0f, 1.0f, 1.0f, Param::DistanceAttenuation,
                               "AudioSource distance attenuation");
             
-            RegisterParameter(definition, "Gain", "",
-                              0.0f, 1.0f, 0.0f, 1.0f, 1.0f, Param::Gain,
-                              "Fixed volume amount");
+            RegisterParameter(definition, "Gain", "dB",
+                              0.f, 20.f, 0.0f, 1.0f, 1.0f, Param::Gain,
+                              "Additional gain");
             
             RegisterParameter(definition, "Custom Falloff", "",
                               0.0f, 1.0f, 0.0f, 1.0f, 1.0f, Param::CustomFalloff,
@@ -128,7 +128,7 @@ namespace HoaLibraryVR_Spatializer
         
         float getAttenuation(effect_state_t* state, float_t distanceIn, float_t attenuationIn)
         {
-            return (p[Param::DistanceAttenuation] * attenuationIn + p[Param::Gain] +
+            return (p[Param::DistanceAttenuation] * attenuationIn +
                     p[Param::CustomFalloff] * (1.0f / FastMax(1.0f, distanceIn)));
         }
         
@@ -161,6 +161,8 @@ namespace HoaLibraryVR_Spatializer
             const float_t dir_y = lm[1] * pos_x + lm[5] * pos_y + lm[ 9] * pos_z + lm[13];
             const float_t dir_z = lm[2] * pos_x + lm[6] * pos_y + lm[10] * pos_z + lm[14];
             
+            const auto gain = std::powf(10.f, p[Param::Gain] * 0.05f);
+            HoaLibraryVR::SetSourceGain(m_source_id, gain);
             HoaLibraryVR::SetSourcePan(m_source_id, pan);
             HoaLibraryVR::SetSourcePosition(m_source_id, dir_x, dir_y, dir_z);
             HoaLibraryVR::SetSourceOptim(m_source_id, optimization);
