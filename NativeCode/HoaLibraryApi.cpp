@@ -17,9 +17,9 @@ namespace HoaLibraryVR
         return new HoaLibraryApi(vectorsize);
     }
     
-    PolarCoordinate cartopol(CartesianCoordinate car)
+    SphericalCoordinate cartopol(CartesianCoordinate car)
     {
-        PolarCoordinate pol;
+        SphericalCoordinate pol;
         
         pol.radius = std::sqrtf(car.x * car.x + car.y * car.y + car.z * car.z);
         
@@ -35,6 +35,30 @@ namespace HoaLibraryVR
         return pol;
     }
     
+    void SmoothedCartesianCoordinate::setRamp(const size_t ramp)
+    {
+        m_x.setRamp(ramp);
+        m_y.setRamp(ramp);
+        m_z.setRamp(ramp);
+    }
+    
+    void SmoothedCartesianCoordinate::setValues(CartesianCoordinate car)
+    {
+        m_x.setValue(car.x);
+        m_y.setValue(car.y);
+        m_z.setValue(car.z);
+    }
+    
+    CartesianCoordinate SmoothedCartesianCoordinate::getValues() const
+    {
+        return {m_x.getValue(), m_y.getValue(), m_z.getValue()};
+    }
+    
+    CartesianCoordinate SmoothedCartesianCoordinate::process()
+    {
+        return {m_x.process(), m_y.process(), m_z.process()};
+    }
+    
     // ==================================================================================== //
     // Source
     // ==================================================================================== //
@@ -45,6 +69,7 @@ namespace HoaLibraryVR
     , m_mono_input_buffer(vectorsize, 0.f)
     , m_temp_harmonics(m_encoder.getNumberOfHarmonics(), 0.f)
     {
+        m_smoothed_position.setRamp(1100); // in samps (± 25ms at 44.1kHz)
         m_optim.setMode(optim_mode_t::Basic);
     }
     
@@ -91,26 +116,26 @@ namespace HoaLibraryVR
     
     void Source::setPosition(float_t x, float_t y, float_t z)
     {
-        m_source_position = {x, y, z};
+        m_smoothed_position.setValues({x, y, z});
     }
     
     void Source::process(float_t** outputs, size_t frames)
     {
         assert(frames == m_mono_input_buffer.size());
         
-        auto polar_coords = cartopol(m_source_position);
-        
-        // We let unity provide gain attenuation when the source is farther than 1 meter.
-        // @todo Set it to "minimum distance" instead of the arbitrary 1 meter value.
-        m_encoder.setRadius(std::min<float_t>(polar_coords.radius, 1.0f));
-        m_encoder.setAzimuth(polar_coords.azimuth);
-        m_encoder.setElevation(polar_coords.elevation);
-        
         const bool process_optim = m_optim.getMode() != optim_mode_t::Basic;
         
         auto* input = m_mono_input_buffer.data();
         for(int i = 0; i < frames; ++i)
         {
+            auto polar_coords = cartopol(m_smoothed_position.process());
+            
+            // We let unity provide gain attenuation when the source is farther than 1 meter.
+            // @todo Set it to "minimum distance" instead of the arbitrary 1 meter value.
+            m_encoder.setRadius(std::min<float_t>(polar_coords.radius, 1.0f));
+            m_encoder.setAzimuth(polar_coords.azimuth);
+            m_encoder.setElevation(polar_coords.elevation);
+            
             auto* harmonics = m_temp_harmonics.data();
             m_encoder.process(input, harmonics);
             

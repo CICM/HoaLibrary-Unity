@@ -38,6 +38,7 @@
 #endif
 
 #include <Hoa.hpp>
+#include <Hoa_Line.hpp>
 
 #include <assert.h>
 #include <atomic>
@@ -79,11 +80,28 @@ namespace HoaLibraryVR
         float_t z = 0.f;
     };
     
-    struct PolarCoordinate
+    struct SphericalCoordinate
     {
         float_t radius = 0.f;
         float_t azimuth = 0.f;
         float_t elevation = 0.f;
+    };
+    
+    struct SmoothedCartesianCoordinate
+    {
+        void setRamp(const size_t ramp);
+        
+        void setValues(CartesianCoordinate car);
+        
+        CartesianCoordinate getValues() const;
+        
+        CartesianCoordinate process();
+        
+    private:
+        
+        Line<float_t> m_x = {};
+        Line<float_t> m_y = {};
+        Line<float_t> m_z = {};
     };
     
     class Source
@@ -110,7 +128,7 @@ namespace HoaLibraryVR
         float_t m_gain = 1.f;
         float_t m_pan = 0.f;
         
-        CartesianCoordinate m_source_position {};
+        SmoothedCartesianCoordinate m_smoothed_position {};
         
         using encoder_t = hoa::Encoder<hoa::Hoa3d, float_t>;
         using optim_t = hoa::Optim<hoa::Hoa3d, float_t>;
