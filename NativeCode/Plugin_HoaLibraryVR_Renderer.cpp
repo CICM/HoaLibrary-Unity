@@ -52,7 +52,7 @@ namespace HoaLibraryVR_Renderer
                               Param::MasterGain, "Master Gain");
             
             RegisterParameter(definition, "Response Time", "%",
-                              0.f, 100.f, 100.0f, 1.0f, 1.0f,
+                              50.f, 100.f, 100.0f, 1.0f, 1.0f,
                               Param::ResponseTime, "Response Time");
             
             return numparams;
