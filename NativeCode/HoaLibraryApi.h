@@ -48,6 +48,7 @@
 
 namespace HoaLibraryVR
 {
+    using namespace hoa;
     using float_t = float;
     
     class HoaLibraryApi;
@@ -196,8 +197,11 @@ namespace HoaLibraryVR
         
     private:
         
+        using decoder_t = DecoderBinaural<Hoa3d, float_t, hrir::Sadie_D2_3D>;
+        using hrir_t = decoder_t::hrir_t;
+        
         static constexpr size_t m_output_channels = 2;
-        static constexpr size_t m_order = 3;
+        static constexpr size_t m_order = hrir_t::getOrderOfDecomposition();
         static constexpr size_t m_num_harmonics = get_num_harmonics_for_order(m_order);
         
         const size_t m_vectorsize;
@@ -210,7 +214,6 @@ namespace HoaLibraryVR
         
         std::array<float_t*, m_num_harmonics> m_soundfield_matrix;
         
-        using decoder_t = hoa::DecoderBinaural<hoa::Hoa3d, float_t>;
         decoder_t m_decoder;
         
         std::array<float_t*, m_output_channels> m_binaural_output_matrix;
