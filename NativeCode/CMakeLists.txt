@@ -57,15 +57,14 @@ source_group(UnityPlugin FILES ${HOA_UNITY_SOURCES})
 
 #--------------------------------------
 
-set(HOALIBRARY_DIR "${PROJECT_SOURCE_DIR}/HoaLibrary" CACHE PATH "Path to HoaLibrary")
-file(GLOB HOALIBRARY_SOURCES_DIR "${HOALIBRARY_DIR}/Sources")
-file(GLOB HOALIBRARY_SOURCES ${HOALIBRARY_SOURCES_DIR}/*.hpp)
-source_group(HoaLibrary FILES ${HOALIBRARY_SOURCES})
+# don't add hoa tests
+set(HOA_BUILD_TESTS OFF CACHE INTERNAL "")
+add_subdirectory(HoaLibrary)
 
 #--------------------------------------
 
-add_library(AudioPluginHoaLibraryVR SHARED ${HOA_UNITY_SOURCES} ${HOALIBRARY_SOURCES})
-target_include_directories(AudioPluginHoaLibraryVR PUBLIC ${HOALIBRARY_SOURCES_DIR})
+add_library(AudioPluginHoaLibraryVR SHARED ${HOA_UNITY_SOURCES})
+target_link_libraries(AudioPluginHoaLibraryVR PRIVATE HoaLibrary::HoaLibrary)
 
 #--------------------------------------
 # Properties
