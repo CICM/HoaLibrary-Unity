@@ -165,9 +165,6 @@ namespace HoaLibraryVR
         //! attenuation, range [1, inf) for gain boost.
         void setMasterGain(float_t gain);
         
-        //! @brief Sets the response time (could be usefull to reduce the cpu).
-        void setResponseTime(float_t response_time);
-        
         //! @brief Renders and outputs an interleaved output buffer in float format.
         //! @param num_frames Size of output buffer in frames.
         //! @param num_channels Number of channels in output buffer.

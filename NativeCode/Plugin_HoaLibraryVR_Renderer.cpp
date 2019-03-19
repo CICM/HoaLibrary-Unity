@@ -35,7 +35,6 @@ namespace HoaLibraryVR_Renderer
         enum Param
         {
             MasterGain,
-            ResponseTime,
             Size
         };
         
@@ -50,10 +49,6 @@ namespace HoaLibraryVR_Renderer
             RegisterParameter(definition, "Master Gain", "dB",
                               -120.f, 50.f, 0.0f, 1.0f, 1.0f,
                               Param::MasterGain, "Master Gain");
-            
-            RegisterParameter(definition, "Response Time", "%",
-                              50.f, 100.f, 100.0f, 1.0f, 1.0f,
-                              Param::ResponseTime, "Response Time");
             
             return numparams;
         }
@@ -124,9 +119,7 @@ namespace HoaLibraryVR_Renderer
             }
             
             const auto gain = std::powf(10.f, p[Param::MasterGain] * 0.05f);
-            const auto response_time = p[Param::ResponseTime];
             
-            HoaLibraryVR::SetResponseTime(response_time);
             HoaLibraryVR::SetMasterGain(gain);
             HoaLibraryVR::ProcessListener(length, outputs);
         }
