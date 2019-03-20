@@ -1,11 +1,12 @@
 //==============================================================================
+// HoaLibrary for Unity - version 1.0.0
+// https://github.com/CICM/HoaLibrary-Unity
 // Copyright (c) 2019, Eliott Paris, CICM, ArTeC.
 // For information on usage and redistribution, and for a DISCLAIMER OF ALL
 // WARRANTIES, see the file, "LICENSE.txt," in this distribution.
-//
 // Thirdparty :
-// - [HoaLibrary-Light](https://github.com/CICM/HoaLibrary-Light)
-// - Unity [nativeaudioplugins](https://bitbucket.org/Unity-Technologies/nativeaudioplugins) SDK.
+// - HoaLibrary-Light: https://github.com/CICM/HoaLibrary-Light
+// - Unity nativeaudioplugins SDK: https://bitbucket.org/Unity-Technologies/nativeaudioplugins.
 //==============================================================================
 
 // Please note that this plugin will only work on Unity 5.2 or higher.
