@@ -70,15 +70,6 @@ namespace HoaLibraryVR {
         }
     }
     
-    void SetResponseTime(float_t response_time)
-    {
-        auto hoalib_copy = hoalib;
-        if (hoalib_copy != nullptr)
-        {
-            hoalib_copy->api->setResponseTime(response_time);
-        }
-    }
-    
     HoaLibraryApi::source_id_t CreateSource()
     {
         auto id = HoaLibraryApi::invalid_source_id;

@@ -55,9 +55,12 @@ set(HOA_UNITY_SOURCES
         )
 source_group(UnityPlugin FILES ${HOA_UNITY_SOURCES})
 
-#--------------------------------------
+# activate optimizations
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msse -msse2 -msse3 -mfpmath=sse -march=native")
 
-# don't add hoa tests
+#--------------------------------------
+# HoaLibrary
+
 set(HOA_BUILD_TESTS OFF CACHE INTERNAL "")
 add_subdirectory(HoaLibrary)
 

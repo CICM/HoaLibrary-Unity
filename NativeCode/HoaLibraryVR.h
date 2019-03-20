@@ -29,9 +29,6 @@ namespace HoaLibraryVR
     //! @brief Updates the listener's master gain.
     void SetMasterGain(float_t gain);
     
-    //! @brief Sets the response time (could be usefull to reduce the cpu).
-    void SetResponseTime(float_t response_time);
-    
     //! @brief Creates an object audio source to be spatialized.
     source_id_t CreateSource();
     
