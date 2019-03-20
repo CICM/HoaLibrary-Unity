@@ -69,6 +69,16 @@ namespace HoaLibraryVR
         HOA_EXPORT HoaLibraryApi* CreateHoaLibraryApi(size_t vectorsize);
     }
     
+    using decoder_t = DecoderBinaural<Hoa3d, float_t, hrir::Sadie_D2_3D>;
+    using harmonics_matrix_t = decoder_t::input_matrix_t;
+    using hrir_t = decoder_t::hrir_t;
+    using stereo_matrix_t = Eigen::Matrix2X<float_t>;
+    using vector_t = Eigen::VectorX<float_t>;
+    
+    static constexpr size_t k_output_channels = 2;
+    static constexpr size_t k_order = hrir_t::getOrderOfDecomposition();
+    static constexpr size_t k_num_harmonics = get_num_harmonics_for_order(k_order);
+    
     // ==================================================================================== //
     // Source
     // ==================================================================================== //
@@ -121,7 +131,7 @@ namespace HoaLibraryVR
         
         void setPosition(float_t x, float_t y, float_t z);
         
-        void process(float_t** outputs, size_t frames);
+        void process(harmonics_matrix_t& harmonics_matrix);
         
     private:
         
@@ -137,8 +147,8 @@ namespace HoaLibraryVR
         encoder_t m_encoder;
         optim_t m_optim;
         
-        std::vector<float_t> m_mono_input_buffer {};
-        std::vector<float_t> m_temp_harmonics {};
+        vector_t m_mono_input_buffer {};
+        vector_t m_temp_harmonics {};
     };
     
     // ==================================================================================== //
@@ -152,8 +162,11 @@ namespace HoaLibraryVR
         
         using source_id_t = int;
         
+        //! @brief Constructor
+        //! @details Use the CreateHoaLibraryApi instead.
         HoaLibraryApi(size_t vectorsize);
         
+        // Destructor
         ~HoaLibraryApi();
         
         // Invalid source id that can be used to initialize handler variables during
@@ -190,12 +203,10 @@ namespace HoaLibraryVR
                                         size_t num_frames);
         
         //! @brief Sets the given source's position.
-        //! @details Note that, the given position for an ambisonic source is only used
-        //! to determine the corresponding room effects to be applied.
         //! @param source_id Id of source.
-        //! @param x X coordinate of source position in world space.
-        //! @param y Y coordinate of source position in world space.
-        //! @param z Z coordinate of source position in world space.
+        //! @param x X coordinate of source position.
+        //! @param y Y coordinate of source position.
+        //! @param z Z coordinate of source position.
         void setSourcePosition(source_id_t source_id, float_t x, float_t y, float_t z);
         
         //! @brief Sets the stereo pan
@@ -212,13 +223,6 @@ namespace HoaLibraryVR
         
     private:
         
-        using decoder_t = DecoderBinaural<Hoa3d, float_t, hrir::Sadie_D2_3D>;
-        using hrir_t = decoder_t::hrir_t;
-        
-        static constexpr size_t m_output_channels = 2;
-        static constexpr size_t m_order = hrir_t::getOrderOfDecomposition();
-        static constexpr size_t m_num_harmonics = get_num_harmonics_for_order(m_order);
-        
         const size_t m_vectorsize;
         
         // Incremental source id counter.
@@ -227,11 +231,8 @@ namespace HoaLibraryVR
         
         float_t m_master_gain = 1.f;
         
-        std::array<float_t*, m_num_harmonics> m_soundfield_matrix;
-        
+        harmonics_matrix_t m_soundfield_matrix;
         decoder_t m_decoder;
-        
-        std::array<float_t*, m_output_channels> m_binaural_output_matrix;
     };
 }
 

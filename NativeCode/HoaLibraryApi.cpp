@@ -66,11 +66,14 @@ namespace HoaLibraryVR
     Source::Source(size_t order, size_t vectorsize)
     : m_encoder(order)
     , m_optim(order)
-    , m_mono_input_buffer(vectorsize, 0.f)
-    , m_temp_harmonics(m_encoder.getNumberOfHarmonics(), 0.f)
+    , m_mono_input_buffer(vectorsize)
+    , m_temp_harmonics(m_encoder.getNumberOfHarmonics())
     {
         m_smoothed_position.setRamp(1100); // in samps (± 25ms at 44.1kHz)
         m_optim.setMode(optim_mode_t::Basic);
+        
+        m_mono_input_buffer.setZero();
+        m_temp_harmonics.setZero();
     }
     
     Source::~Source()
@@ -102,16 +105,10 @@ namespace HoaLibraryVR
         const float_t left_gain = (1.f - m_pan) * 0.5;
         const float_t right_gain = (1.f + m_pan) * 0.5;
         
-        float_t const* input = inputs;
-        float_t* output = m_mono_input_buffer.data();
+        auto const& stereo_input = stereo_matrix_t::Map(inputs, 2, frames);
         
-        for(int i = 0; i < frames; ++i)
-        {
-            // mono mix
-            *output++ = (((*input) * left_gain)
-                         + ((*(input+1)) * right_gain)) * m_gain;
-            input += 2;
-        }
+        m_mono_input_buffer.noalias() = ((stereo_input.row(0) * left_gain)
+                                         + (stereo_input.row(1) * right_gain)) * m_gain;
     }
     
     void Source::setPosition(float_t x, float_t y, float_t z)
@@ -119,37 +116,44 @@ namespace HoaLibraryVR
         m_smoothed_position.setValues({x, y, z});
     }
     
-    void Source::process(float_t** outputs, size_t frames)
+    void Source::process(harmonics_matrix_t& harmonics_matrix)
     {
-        assert(frames == m_mono_input_buffer.size());
+        assert(harmonics_matrix.cols() == m_mono_input_buffer.size());
         
         const bool process_optim = m_optim.getMode() != optim_mode_t::Basic;
         
         auto* input = m_mono_input_buffer.data();
-        for(int i = 0; i < frames; ++i)
+        for(auto harmonic_vector : harmonics_matrix.colwise())
         {
             auto polar_coords = cartopol(m_smoothed_position.process());
             
-            // We let unity provide gain attenuation when the source is farther than 1 meter.
-            // @todo Set it to "minimum distance" instead of the arbitrary 1 meter value.
-            m_encoder.setRadius(std::min<float_t>(polar_coords.radius, 1.0f));
-            m_encoder.setAzimuth(polar_coords.azimuth);
-            m_encoder.setElevation(polar_coords.elevation);
+            if(m_encoder.getRadius() != polar_coords.radius)
+            {
+                // We let unity provide gain attenuation when the source is farther than 1 meter.
+                // @todo Set it to "minimum distance" instead of the arbitrary 1 meter value.
+                
+                m_encoder.setRadius(std::min<float_t>(polar_coords.radius, 1.0f));
+            }
+            
+            if(m_encoder.getAzimuth() != polar_coords.azimuth)
+            {
+                m_encoder.setAzimuth(polar_coords.azimuth);
+            }
+            
+            if(m_encoder.getElevation() != polar_coords.elevation)
+            {
+                m_encoder.setElevation(polar_coords.elevation);
+            }
             
             auto* harmonics = m_temp_harmonics.data();
-            m_encoder.process(input, harmonics);
+            m_encoder.process(input++, harmonics);
             
             if(process_optim)
             {
                 m_optim.process(harmonics, harmonics);
             }
             
-            for(int harmo = 0; harmo < m_temp_harmonics.size(); ++harmo)
-            {
-                outputs[harmo][i] += harmonics[harmo];
-            }
-            
-            input++;
+            harmonic_vector += m_temp_harmonics;
         }
     }
     
@@ -161,65 +165,27 @@ namespace HoaLibraryVR
     : m_vectorsize(vectorsize)
     , m_source_id_counter(0)
     , m_master_gain(1.f)
-    , m_decoder(m_order)
+    , m_decoder(k_order)
     {
-        m_decoder.prepare(m_vectorsize);
-        
-        for(int channel = 0; channel < m_output_channels; ++channel)
-        {
-            m_binaural_output_matrix[channel] = new float[m_vectorsize];
-        }
-        
-        for(int harmonic = 0; harmonic < m_num_harmonics; ++harmonic)
-        {
-            m_soundfield_matrix[harmonic] = new float[m_vectorsize];
-        }
+        m_decoder.prepare(m_vectorsize);        
+        m_soundfield_matrix.resize(k_num_harmonics, m_vectorsize);
     }
     
     HoaLibraryApi::~HoaLibraryApi()
-    {
-        for(int i = 0; i < m_output_channels; ++i)
-        {
-            delete [] m_binaural_output_matrix[i];
-        }
-        
-        for(int i = 0; i < m_num_harmonics; ++i)
-        {
-            delete [] m_soundfield_matrix[i];
-        }
-    }
+    {}
     
     bool HoaLibraryApi::fillInterleavedOutputBuffer(size_t frames, float_t* outputs)
     {
-        // clear output buffer
-        std::fill(outputs, outputs + frames * m_output_channels, 0.f);
-        
-        // clear encoded source matrix
-        for(float_t* harmonic_vec : m_soundfield_matrix)
-        {
-            std::fill(harmonic_vec, harmonic_vec + frames, 0.f);
-        }
+        m_soundfield_matrix.setZero();
         
         for(auto& source : m_sources)
         {
-            source.second->process(m_soundfield_matrix.data(), frames);
+            source.second->process(m_soundfield_matrix);
         }
         
-        auto soundfield_matrix = const_cast<float_t const**>(m_soundfield_matrix.data());
-        
-        float_t** binaural_output_matrix = m_binaural_output_matrix.data();
-        
-        m_decoder.processBlock(soundfield_matrix, binaural_output_matrix);
-        
-        // convert matrix to interleaved vector and apply gain
-        const size_t numouts = 2;
-        for (int i = 0; i < frames; ++i)
-        {
-            for(int channel = 0; channel < numouts; ++channel)
-            {
-                outputs[i * numouts + channel] = binaural_output_matrix[channel][i] * m_master_gain;
-            }
-        }
+        auto outs = stereo_matrix_t::Map(outputs, 2, frames);
+        m_decoder.processBlock(m_soundfield_matrix, outs);
+        outs *= m_master_gain;
         
         return true;
     }
@@ -233,7 +199,7 @@ namespace HoaLibraryVR
     {
         const auto source_id = m_source_id_counter.fetch_add(1);
         assert(m_sources.find(source_id) == m_sources.end());
-        const auto order = m_order; // (silent symbol not found issue on osx)
+        const auto order = k_order; // (silent symbol not found issue on osx)
         m_sources[source_id] = std::make_unique<Source>(order, m_vectorsize);
         return source_id;
     }
