@@ -13,8 +13,10 @@ The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity aud
 
 ```shell
 # clone project
-$ git clone --recursive https://github.com/CICM/HoaLibrary-Unity.git
+$ git clone https://github.com/CICM/HoaLibrary-Unity.git
 $ cd HoaLibrary-Unity
+# init submodules
+$ git submodule update --init --recursive
 # create build directory
 $ cd NativeCode
 $ mkdir build && cd build
