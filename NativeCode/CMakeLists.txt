@@ -44,7 +44,7 @@ set(HOA_UNITY_SOURCES
         ${HOA_UNITY_SOURCE_DIR}/AudioPluginInterface.h
         ${HOA_UNITY_SOURCE_DIR}/AudioPluginUtil.h
         ${HOA_UNITY_SOURCE_DIR}/AudioPluginUtil.cpp
-        ${HOA_UNITY_SOURCE_DIR}/pluginList.h
+        ${HOA_UNITY_SOURCE_DIR}/PluginList.h
         ${HOA_UNITY_SOURCE_DIR}/HoaLibraryApi.h
         ${HOA_UNITY_SOURCE_DIR}/HoaLibraryApi.cpp
         ${HOA_UNITY_SOURCE_DIR}/HoaLibraryVR.h
