@@ -1,4 +1,6 @@
 //==============================================================================
+// HoaLibrary for Unity - version 1.0.0
+// https://github.com/CICM/HoaLibrary-Unity
 // Copyright (c) 2019, Eliott Paris, CICM, ArTeC.
 // For information on usage and redistribution, and for a DISCLAIMER OF ALL
 // WARRANTIES, see the file, "LICENSE.txt," in this distribution.
@@ -6,20 +8,13 @@
 
 using UnityEngine;
 using UnityEngine.Audio;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
-
 
 // HoaLibraryVR supports Unity 2017.1 or newer.
 #if !UNITY_2017_1_OR_NEWER
   #error HoaLibraryVR SDK requires Unity 2017.1 or newer.
 #endif  // !UNITY_2017_1_OR_NEWER
 
-/// This is the main HoaLibraryVR class that communicates with the native code implementation of
-/// the audio system.
+/// This is the main HoaLibraryVR class that communicates with the native code
 public static class HoaLibraryVR {
 
 #if UNITY_EDITOR
