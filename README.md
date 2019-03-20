@@ -1,6 +1,6 @@
 ## Hoa for [Unity 3D](https://unity3d.com/)
 
-The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity audio plugin.
+The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity audio plugin (supports Unity 2017.1 or newer).
 
 [![Travis](https://img.shields.io/travis/CICM/HoaLibrary-Unity.svg?label=travis)](https://travis-ci.org/CICM/HoaLibrary-Unity)
 [![Appveyor](https://img.shields.io/appveyor/ci/CICM/HoaLibrary-Unity.svg?label=appveyor)](https://ci.appveyor.com/project/CICM/HoaLibrary-Unity/history)
