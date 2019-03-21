@@ -38,8 +38,24 @@ $ cmake --build . --config Release --target INSTALL
 
 You should see generated plugin in `/Assets/Plugins` directory.
 
+### Organization
+
+- [CICM](http://cicm.mshparisnord.org)
+- [Université Paris 8](https://www.univ-paris8.fr)
+- [(EUR) ArTeC](http://eur-artec.fr/)
+
+### Author :
+
+- [Eliott Paris](https://github.com/eliottparis)
+
+### Credits :
+
+- [HoaLibrary](https://github.com/CICM/HoaLibrary-Light)
+- [Unity nativeaudioplugins SDK](https://bitbucket.org/Unity-Technologies/nativeaudioplugins).
+- Sounds included in the demo from [freesound.org](https://freesound.org/).
+
 ### Licence :
-The HoaLibrary is under the terms of the <a title="GNU" href="http://www.gnu.org/copyleft/gpl.html">GNU Public License</a>. </br>
+HoaLibrary-Unity is under the terms of the [GNU Public License](http://www.gnu.org/copyleft/gpl.html). </br>
 If you want to avoid the restrictions of the GPL and use HoaLibrary for a closed-source product, please [contact the CICM](http://cicm.mshparisnord.org/).
 
 ### Other implementations :
