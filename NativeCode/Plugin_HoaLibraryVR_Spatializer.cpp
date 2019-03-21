@@ -168,6 +168,9 @@ namespace HoaLibraryVR_Spatializer
             HoaLibraryVR::SetSourcePosition(m_source_id, dir_x, dir_y, dir_z);
             HoaLibraryVR::SetSourceOptim(m_source_id, optimization);
             HoaLibraryVR::ProcessSource(m_source_id, length, inputs);
+            
+            // Copy inputs to outputs to allow post processing/analysis features in Unity.
+            std::memcpy(outputs, inputs, length * sizeof(float_t) * numouts);
         }
         
     private:
