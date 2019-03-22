@@ -48,9 +48,9 @@ Library/
 obj/
 Logs/
 ProjectSettings/ProjectVersion.txt
-Assets/Plugins.meta
 
-# Unity generated
-Assets/Plugins
+# Build product
+Assets/HoaLibrary/Plugins.meta
+Assets/HoaLibrary/Plugins
 *.csproj
 *.sln
