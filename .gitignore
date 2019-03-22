@@ -51,6 +51,6 @@ ProjectSettings/ProjectVersion.txt
 
 # Build product
 Assets/HoaLibrary/Plugins.meta
-Assets/HoaLibrary/Plugins
+#Assets/HoaLibrary/Plugins
 *.csproj
 *.sln
