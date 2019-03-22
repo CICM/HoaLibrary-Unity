@@ -23,18 +23,26 @@ public class SourceController : MonoBehaviour
   [Tooltip("Radius of the object")]
   [Range(0.0f, 20.0f)]
   public float radius = 8;
-
+  private GameObject mainCamera;
   const float TWO_PI = Mathf.PI * 2f;
+
+  //AudioListener listener;
 
   // Start is called before the first frame update
   void Start()
   {
+    //mainCamera = transform
+      //listener = GetComponent<AudioListener>();
   }
 
   // Update is called once per frame
   void Update()
   {
-    transform.position = SphericalToCartesian(azimuth,elevation,radius);
+      // Spin the object around the world origin at 20 degrees/second.
+      //transform.RotateAround(listener.getPosition, Vector3.up, 10 * Time.deltaTime);
+      //transform.RotateAround(Vector3.zero, Vector3.up, 100 * Time.deltaTime);
+
+      transform.position = SphericalToCartesian(azimuth,elevation,radius);
   }
 
   //On ajoute pi/2 a lazimuth pour corriger la position

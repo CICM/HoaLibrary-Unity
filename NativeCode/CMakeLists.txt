@@ -84,7 +84,7 @@ endif ()
 # INSTALL
 #--------------------------------------
 
-set(HOA_UNITY_INSTALL_DIR "${PROJECT_SOURCE_DIR}/../Assets/Plugins")
+set(HOA_UNITY_INSTALL_DIR "${PROJECT_SOURCE_DIR}/../Assets/HoaLibraryVR/Plugins")
 
 set(INSTALL_BIN_DIR "")
 if (MSVC)
