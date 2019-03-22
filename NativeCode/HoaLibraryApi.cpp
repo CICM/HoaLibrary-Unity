@@ -11,7 +11,7 @@
 
 #include "HoaLibraryApi.h"
 
-namespace HoaLibraryVR
+namespace HoaLibraryUnity
 {
     HOA_EXPORT HoaLibraryApi* CreateHoaLibraryApi(size_t vectorsize)
     {

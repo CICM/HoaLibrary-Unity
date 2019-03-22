@@ -48,7 +48,7 @@
 #include <array>
 #include <unordered_map>
 
-namespace HoaLibraryVR
+namespace HoaLibraryUnity
 {
     using namespace hoa;
     using float_t = float;

@@ -8,11 +8,11 @@
 
 using UnityEngine;
 
-/// HoaLibraryVR Audio source component that adds more spatial audio settings.
-[AddComponentMenu("HoaLibraryVR/AudioSource")]
+/// HoaLibrary Audio source component that adds more spatial audio settings.
+[AddComponentMenu("HoaLibrary/AudioSource")]
 [RequireComponent(typeof(AudioSource))]
 [ExecuteInEditMode]
-public class HoaLibraryVRAudioSource : MonoBehaviour {
+public class HoaLibraryAudioSource : MonoBehaviour {
 
   /// Ambisonic optimization.
   public enum Optim {
@@ -49,14 +49,14 @@ public class HoaLibraryVRAudioSource : MonoBehaviour {
   void OnEnable() {
 #if UNITY_2017_2_OR_NEWER
     // Validate the spatializer plugin selection.
-    if (AudioSettings.GetSpatializerPluginName() != HoaLibraryVR.spatializerPluginName) {
-      Debug.LogWarning(HoaLibraryVR.spatializerPluginName + " must be selected as the " +
+    if (AudioSettings.GetSpatializerPluginName() != HoaLibrary.spatializerPluginName) {
+      Debug.LogWarning(HoaLibrary.spatializerPluginName + " must be selected as the " +
                        "Spatializer Plugin in Edit > Project Settings > Audio.");
     }
 #endif  // UNITY_2017_2_OR_NEWER
     // Validate the source output mixer route.
-    if (HoaLibraryVR.MixerGroup == null || audioSource.outputAudioMixerGroup != HoaLibraryVR.MixerGroup) {
-      Debug.LogWarning("Make sure AudioSource is routed to a mixer that "+ HoaLibraryVR.rendererPluginName + " is attached to.");
+    if (HoaLibrary.MixerGroup == null || audioSource.outputAudioMixerGroup != HoaLibrary.MixerGroup) {
+      Debug.LogWarning("Make sure AudioSource is routed to a mixer that "+ HoaLibrary.rendererPluginName + " is attached to.");
     }
   }
 #endif  // UNITY_EDITOR

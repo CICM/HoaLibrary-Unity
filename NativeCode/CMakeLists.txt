@@ -6,7 +6,7 @@
 
 cmake_minimum_required(VERSION 3.2)
 
-project(HoaLibraryVR CXX)
+project(HoaLibraryUnity CXX)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -47,11 +47,11 @@ set(HOA_UNITY_SOURCES
         ${HOA_UNITY_SOURCE_DIR}/PluginList.h
         ${HOA_UNITY_SOURCE_DIR}/HoaLibraryApi.h
         ${HOA_UNITY_SOURCE_DIR}/HoaLibraryApi.cpp
-        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryVR.h
-        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryVR.cpp
+        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryUnity.h
+        ${HOA_UNITY_SOURCE_DIR}/HoaLibraryUnity.cpp
         ${HOA_UNITY_SOURCE_DIR}/UnityCallbacks.hpp
-        ${HOA_UNITY_SOURCE_DIR}/Plugin_HoaLibraryVR_Renderer.cpp
-        ${HOA_UNITY_SOURCE_DIR}/Plugin_HoaLibraryVR_Spatializer.cpp
+        ${HOA_UNITY_SOURCE_DIR}/Plugin_HoaLibrary_Renderer.cpp
+        ${HOA_UNITY_SOURCE_DIR}/Plugin_HoaLibrary_Spatializer.cpp
         )
 source_group(UnityPlugin FILES ${HOA_UNITY_SOURCES})
 
@@ -66,25 +66,27 @@ add_subdirectory(HoaLibrary)
 
 #--------------------------------------
 
-add_library(AudioPluginHoaLibraryVR SHARED ${HOA_UNITY_SOURCES})
-target_link_libraries(AudioPluginHoaLibraryVR PRIVATE HoaLibrary::HoaLibrary)
+set(HoaLibraryUnityPluginName "AudioPluginHoaLibrary")
+
+add_library(${HoaLibraryUnityPluginName} SHARED ${HOA_UNITY_SOURCES})
+target_link_libraries(${HoaLibraryUnityPluginName} PRIVATE HoaLibrary::HoaLibrary)
 
 #--------------------------------------
 # Properties
 #--------------------------------------
 
 if (APPLE)
-    set_target_properties(AudioPluginHoaLibraryVR PROPERTIES LINK_FLAGS "-Wl,-all_load")
-    set_target_properties(AudioPluginHoaLibraryVR PROPERTIES PREFIX "" SUFFIX ".bundle")
+    set_target_properties(${HoaLibraryUnityPluginName} PROPERTIES LINK_FLAGS "-Wl,-all_load")
+    set_target_properties(${HoaLibraryUnityPluginName} PROPERTIES PREFIX "" SUFFIX ".bundle")
 elseif (MSVC)
-    set_target_properties(AudioPluginHoaLibraryVR PROPERTIES LINK_FLAGS "/MANIFEST:NO")
+    set_target_properties(${HoaLibraryUnityPluginName} PROPERTIES LINK_FLAGS "/MANIFEST:NO")
 endif ()
 
 #--------------------------------------
 # INSTALL
 #--------------------------------------
 
-set(HOA_UNITY_INSTALL_DIR "${PROJECT_SOURCE_DIR}/../Assets/HoaLibraryVR/Plugins")
+set(HOA_UNITY_INSTALL_DIR "${PROJECT_SOURCE_DIR}/../Assets/HoaLibrary/Plugins")
 
 set(INSTALL_BIN_DIR "")
 if (MSVC)
@@ -97,7 +99,7 @@ else ()
     set(INSTALL_BIN_DIR "x86_64")
 endif ()
 
-install(TARGETS AudioPluginHoaLibraryVR
+install(TARGETS ${HoaLibraryUnityPluginName}
         LIBRARY DESTINATION "${HOA_UNITY_INSTALL_DIR}/${INSTALL_BIN_DIR}/"
         ARCHIVE DESTINATION "${HOA_UNITY_INSTALL_DIR}/${INSTALL_BIN_DIR}/"
         RUNTIME DESTINATION "${HOA_UNITY_INSTALL_DIR}/${INSTALL_BIN_DIR}/")

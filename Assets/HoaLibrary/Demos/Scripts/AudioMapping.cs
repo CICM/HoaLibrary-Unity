@@ -10,7 +10,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[AddComponentMenu("HoaLibraryVR/AudioMapping")]
+[AddComponentMenu("HoaLibraryUnity/AudioMapping")]
 [ExecuteInEditMode]
 public class AudioMapping : MonoBehaviour
 {

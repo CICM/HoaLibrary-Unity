@@ -10,7 +10,7 @@ matrix:
   include:
   - os: osx
     compiler: clang++
-    env: AudioPlugin HoaLibraryVR
+    env: AudioPluginHoaLibrary
     script:
     - cd NativeCode
     - mkdir build && cd build
