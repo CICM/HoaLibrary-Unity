@@ -4,19 +4,17 @@ The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity aud
 
 [![Travis](https://img.shields.io/travis/CICM/HoaLibrary-Unity.svg?label=travis)](https://travis-ci.org/CICM/HoaLibrary-Unity)
 [![Appveyor](https://img.shields.io/appveyor/ci/CICM/HoaLibrary-Unity.svg?label=appveyor)](https://ci.appveyor.com/project/CICM/HoaLibrary-Unity/history)
+[![Licence](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://github.com/CICM/HoaLibrary-Unity/blob/master/LICENSE)
+
+You can download the latest version of the package in the [releases page](https://github.com/CICM/HoaLibrary-Unity/releases).
+To install and use the plugin, please see [this page](https://github.com/CICM/HoaLibrary-Unity/wiki).
 
 <a href="https://github.com/CICM/HoaLibrary-Unity/releases/latest">
   <img src="https://img.shields.io/github/release/CICM/HoaLibrary-Unity.svg" alt="Release">
 </a>
-<a href="https://github.com/CICM/HoaLibrary-Unity/blob/master/LICENSE">
-  <img src="https://img.shields.io/badge/license-GPL--v3-blue.svg" alt="License">
-</a>
 <a href="https://github.com/CICM/HoaLibrary-Unity/wiki">
  <img src="https://img.shields.io/badge/@-documentation-blue.svg" alt="Documentation">
 </a>
-
-You can download the latest version of the package in the [releases page](https://github.com/CICM/HoaLibrary-Unity/releases).
-To install and use the plugin, please see [this page](https://github.com/CICM/HoaLibrary-Unity/wiki).
 
 ---
 
