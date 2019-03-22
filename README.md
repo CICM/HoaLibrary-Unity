@@ -36,7 +36,7 @@ $ cmake .. -G "Visual Studio 15 2017 Win64"
 $ cmake --build . --config Release --target INSTALL
 ```
 
-You should see generated plugin in `/Assets/Plugins` directory.
+You should see generated plugin in `/Assets/HoaLibrary/Plugins` directory.
 
 ### Organization
 
