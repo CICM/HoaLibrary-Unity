@@ -7,7 +7,10 @@ The [HoaLibrary](https://github.com/CICM/HoaLibrary-Light) as a native unity aud
 [![Licence](https://img.shields.io/badge/license-GPL--v3-blue.svg)](https://github.com/CICM/HoaLibrary-Unity/blob/master/LICENSE)
 
 You can download the latest version of the package in the [releases page](https://github.com/CICM/HoaLibrary-Unity/releases).
+
 To install and use the plugin, please see [this page](https://github.com/CICM/HoaLibrary-Unity/wiki).
+
+<img width="1552" alt="HoaLibrary for Unity package" src="https://user-images.githubusercontent.com/1750257/54919682-bd3d8d00-4f01-11e9-8ef6-f94215f0245f.png">
 
 <a href="https://github.com/CICM/HoaLibrary-Unity/releases/latest">
   <img src="https://img.shields.io/github/release/CICM/HoaLibrary-Unity.svg" alt="Release">
