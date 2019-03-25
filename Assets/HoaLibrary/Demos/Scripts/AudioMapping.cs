@@ -17,11 +17,11 @@ public class AudioMapping : MonoBehaviour
   public bool amplitudeScaleEnabled = true;
 
   private int qSamples = 1024;    // array size
-  private float refValue = 0.1F;  // RMS value for 0 dB
+  private float refValue = 0.1f;  // RMS value for 0 dB
   private float rmsValue;         // sound level - RMS
   private float dbValue;          // sound level - dB
-  private float volume = 2;       // set how much the scale will vary
-  private float minScale = 2;     // minimum scale
+  public float volume = 2f;       // set how much the scale will vary
+  public float minScale = 0.5f;   // minimum scale
   private float[] samples;        // audio samples
 
   // Start is called before the first frame update
